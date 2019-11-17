@@ -21,3 +21,40 @@
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+
+SecureAppPractices/target/
+SecureAppPractices/.idea
+SecureAppPractices/.mvn
+SecureAppPractices/mvnw
+SecureAppPractices/mvnw.cmd
+
+HELP.md
+!SecureAppPractices/.mvn/wrapper/maven-wrapper.jar
+!SecureAppPractices/**/src/main/**
+!SecureAppPractices/**/src/test/**
+
+### STS ###
+SecureAppPractices/.apt_generated
+SecureAppPractices/.classpath
+SecureAppPractices/.factorypath
+SecureAppPractices/.project
+SecureAppPractices/.settings
+SecureAppPractices/.springBeans
+SecureAppPractices/.sts4-cache
+
+### IntelliJ IDEA ###
+SecureAppPractices/.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+SecureAppPractices/nbproject/private/
+SecureAppPractices/nbbuild/
+SecureAppPractices/dist/
+SecureAppPractices/nbdist/
+SecureAppPractices/.nb-gradle/
+SecureAppPractices/build/
+
+### VS Code ###
+SecureAppPractices/.vscode/
