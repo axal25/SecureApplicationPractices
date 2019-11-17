@@ -19,6 +19,28 @@ Project for Project study course in University. Online study platform teaching g
 ### To do
     1. [DONE] Done
     2. Not done
+
+### How to Github:
+
+1. git clone https://github.com/axal25/SecureApplicationPractices
+2. copy contents from diractory created by 'git clone' command to local of your existing project
+4. git add *
+5. git config --global user.email user_name@host
+6. git commit -m "first commit from terminal"
+7. git remote add origin https://github.com/user_name/repository_name
+8. git remote -v
+9. git push -u origin master
+10. git pull origin master
+
+#### to remove a file:
+11. git rm <file>
+
+#### to host via github pages:
+12. have index.html file in home directory of your repo directory (where .git is)
+13. go to repository page ( example: https://axal25.github.io/SecureApplicationPractices )
+14. go to settings
+15. scroll down to 'Github pages'
+16. choose Source (example: master branch)
 ---
 ---
 ---
