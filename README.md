@@ -14,7 +14,9 @@ Project for Project study course in University. Online study platform teaching g
 [Lombok package & plugin config](https://www.baeldung.com/lombok-ide) \
 [Test tutorial article](https://www.mkyong.com/spring-boot/spring-boot-junit-5-mockito/) \
 [Rest Client usage](https://stackoverflow.com/questions/42365266/call-another-rest-api-from-my-server-in-spring-boot) \
-[Response error handling](https://www.baeldung.com/spring-rest-template-error-handling) 
+[Response error handling](https://www.baeldung.com/spring-rest-template-error-handling) \
+[Spring boot tutorial](https://www.youtube.com/watch?v=vtPkZShrvXQ) \
+[Docker / PostgreSQL](https://www.youtube.com/watch?v=aHbE3pTyG-Q)
 ---
 ### To do
     1. [DONE] Done
@@ -41,6 +43,104 @@ Project for Project study course in University. Online study platform teaching g
 14. go to settings
 15. scroll down to 'Github pages'
 16. choose Source (example: master branch)
+
+### Docker & PostgreSQL
+
+#### Docker
+1. check version of your OS
+2. for unix use command: \
+`lsb_release -a` \
+    result: \
+`No LSB modules are available.` \
+`Distributor ID:	Ubuntu` \
+`Description:	Ubuntu 18.04.3 LTS` \
+`Release:	18.04` \
+`Codename:	bionic` \
+    for additional information use commands: \
+`cat /proc/cpuinfo` \
+or \
+`uname -m`
+3. Visit https://hub.docker.com/editions/community/docker-ce-server-ubuntu
+4. If your OS isn't named in Prerequisites try https://docs.docker.com/install/linux/docker-ce/ubuntu/
+    1. Follow one of 3 way of Docker installation:
+        1. Docker’s repositories
+        2. Package installation
+        3. Convenience script
+            1. Visit https://github.com/docker/docker-install
+            2. `curl -fsSL https://get.docker.com -o get-docker.sh`
+                1. To install curl \
+                `sudo apt install curl` 
+            3. `sudo sh get-docker.sh`
+            4. Test installation with: \
+            `make check`
+            5. To use docked as non-root user: \
+            `sudo usermod -aG docker YOUR_USER_NAME`
+5. Check docker installation using: \
+    `docker -help` 
+
+#### Postgres
+1. Visit https://hub.docker.com/_/postgres to check for versions, find instructions like 'How to use this image', 'start a postgres instance'
+2. Pull image \
+`sudo docker pull postgres:alpine`
+3. To see downloaded images   
+`sudo docker images` \
+Result: \
+`REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE` \
+ `postgres            alpine              5b681acb1cfc        3 weeks ago         72.8MB`
+4. To run downloaded image:
+`sudo docker run --name some-postgres -e POSTGRES_PASSWORD=mysecretpassword -d -p 5432:5432 postgres:alpine ` \
+Example: \
+`sudo docker run --name postgresPASSWORD -e POSTGRES_PASSWORD=password -d -p 5432:5432 postgres:alpine` \
+Result: \
+`f0ef0e1f1beef62b9da666b2bd23f6d55cf6436e90583e076174786f2567efbc` \
+Where: 
+    1. last parameter `postgres:alpine` is the `name` of the image with `tag` after `:`
+    2. `mysecretpassword` is password of our choosing
+    3. `some-postgres` after `--name` parameter is name of our choosing 
+5. Check with: \
+`sudo docker ps`
+Result: \
+`CONTAINER ID        IMAGE               COMMAND                  CREATED              STATUS              PORTS                    NAMES` \
+`f0ef0e1f1bee        postgres:alpine     "docker-entrypoint.s…"   About a minute ago   Up About a minute   0.0.0.0:5432->5432/tcp   postgresPASSWORD`
+6. Other useful commands: 
+    * `sudo docker kill NUMBER_OF_CONTAINER`
+        * the number of container is given as a result of running one
+        * example: `f0ef0e1f1beef62b9da666b2bd23f6d55cf6436e90583e076174786f2567efbc` \
+    * `sudo docker rm NAME_OF_CONTAINER`
+        * the name of container is the name you gave it while creating one
+        * example: `postgresPASSWORD`
+7. To use the container: \
+`sudo docker exec -it postgresPASSWORD bash`
+    * `postgresPASSWORD` is our container name
+8. Then to run psql: \ 
+`psql -U postgres`
+    * `postgres` is postgres root access username
+9. To see all users: `\du`
+Result: \
+` List of roles ` \
+` Role name |                         Attributes                         | Member of `\
+` -----------+------------------------------------------------------------+----------- `  
+` postgres | Superuser, Create role, Create DB, Replication, Bypass RLS | {} `
+10. To see all databases: `\l`
+11. To add database: `create database NAME_OF_DATABASE;` (don't forget about colon)
+12. To connect to database `\c NAME_OF_DATABASE` \
+Result:
+`You are now connected to database "test" as user "postgres".` 
+13. Show all relations: `\d` 
+
+#### Connecting to Docker/Postgres from application
+1. Check if you have installed psql using command `psql`
+    * To install postgres \
+    `sudo apt update` \
+    `sudo apt install postgresql postgresql-contrib` \
+    `sudo -i -u postgres` \
+    `psql` \
+    `\q`
+2. Connect from local machine to postgres instance inside of the docker container: \
+`psql -h localhost -p 5432 -U postgres` \
+Type your password
+3. Now to proper connection from an application
+ 
 ---
 ---
 ---
