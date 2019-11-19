@@ -24,6 +24,10 @@ Project for Project study course in University. Online study platform teaching g
     2. Endpoinds exposed to SQLi (SQL Injection)
         1. Creating on request new database - for 1 user to play around
 
+### To run JAR file
+1. right-click `target` folder or open in terminal `cd ~/IdeaProjects/SecureAppPractices/target$ `
+2. `java -jar SecureAppPractices-0.0.1-SNAPSHOT.jar`
+
 ### How to Github:
 
 1. git clone https://github.com/axal25/SecureApplicationPractices
