@@ -16,11 +16,13 @@ Project for Project study course in University. Online study platform teaching g
 [Rest Client usage](https://stackoverflow.com/questions/42365266/call-another-rest-api-from-my-server-in-spring-boot) \
 [Response error handling](https://www.baeldung.com/spring-rest-template-error-handling) \
 [Spring boot tutorial](https://www.youtube.com/watch?v=vtPkZShrvXQ) \
-[Docker / PostgreSQL](https://www.youtube.com/watch?v=aHbE3pTyG-Q)
+[Docker / PostgreSQL](https://www.youtube.com/watch?v=aHbE3pTyG-Q) \
+[Configuring a DataSource Programmatically in Spring Boot (Multiple Databases)](https://www.baeldung.com/spring-boot-configure-data-source-programmatic)
 ---
 ### To do
-    1. [DONE] Done
-    2. Not done
+    1. [DONE] Safe endpoints: GET (by id & all), POST, PUT, DELETE
+    2. Endpoinds exposed to SQLi (SQL Injection)
+        1. Creating on request new database - for 1 user to play around
 
 ### How to Github:
 
