@@ -12,7 +12,7 @@ public interface CourseDao {
 
     default int insertCourse(Course course) {
         UUID id = UUID.randomUUID();
-        return insertCourse( id, new Course( id, course.getName()) );
+        return insertCourse(id, new Course(id, course.getName()));
     }
 
     List<Course> selectAllCourses();

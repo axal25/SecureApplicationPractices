@@ -126,7 +126,17 @@ Result: \
 12. To connect to database `\c NAME_OF_DATABASE` \
 Result:
 `You are now connected to database "test" as user "postgres".` 
-13. Show all relations: `\d` 
+13. Show all relations: `\d`
+14. To run previously created (named) container which is now stopped (killed): \
+`sudo docker start postgresPASSWORD` \
+Result: `postgresPASSWORD` \
+Check using: `sudo docker ps` \
+Result: \
+`CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                    NAMES` \
+`f0ef0e1f1bee        postgres:alpine     "docker-entrypoint.s…"   13 hours ago        Up 5 seconds        0.0.0.0:5432->5432/tcp   postgresPASSWORD` 
+15. To check which container ports are exposed: `sudo docker port postgresPASSWORD` \
+Result: `5432/tcp -> 0.0.0.0:5432` 
+
 
 #### Connecting to Docker/Postgres from application
 1. Check if you have installed psql using command `psql`
