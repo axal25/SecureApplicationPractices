@@ -144,7 +144,7 @@ Result: \
 Result: `5432/tcp -> 0.0.0.0:5432` 
 
 
-#### Connecting to Docker/Postgres from application
+#### Connecting to Docker/Postgres from your machine
 1. Check if you have installed psql using command `psql`
     * To install postgres \
     `sudo apt update` \
@@ -155,7 +155,6 @@ Result: `5432/tcp -> 0.0.0.0:5432`
 2. Connect from local machine to postgres instance inside of the docker container: \
 `psql -h localhost -p 5432 -U postgres` \
 Type your password
-3. Now to proper connection from an application
  
 ---
 ---
