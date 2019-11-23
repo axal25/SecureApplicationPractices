@@ -27,6 +27,7 @@ Project for Project study course in University. Online study platform teaching g
 ### To run JAR file
 1. right-click `target` folder or open in terminal `cd ~/IdeaProjects/SecureAppPractices/target$ `
 2. `java -jar SecureAppPractices-0.0.1-SNAPSHOT.jar`
+3. Swagger api is available at [API](http://localhost:8080/swagger-ui.html#/course-controller)
 
 ### How to Github:
 
