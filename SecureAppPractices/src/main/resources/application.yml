@@ -1,24 +1,27 @@
-app:
-  datasource:
-    jdbc-url: jdbc:postgresql://localhost:5432/postgres
-    username: postgres
-    password: postgres
-    maximum-pool-size: 30
-    schema: safe
+server:
+  port: 8080
 
-spring:
+#app:
+#  datasource:
+#    jdbc-url: jdbc:postgresql://localhost:5432/
+#    username: postgres
+#    password: password
+#    maximum-pool-size: 30
+#    schema: safe
+
+#spring:
 #  jpa:
 #    hibernate:
 #      ddl-auto: create-drop
-  flyway:
-    url: jdbc:postgresql://localhost:5432/postgres?ddl=true
-    user: postgres
-    password: postgres
-    schemas: [public, safe, demos]
-    mixed: true
-    table: flyway_history
-    clean-on-validation-error: true
-    baseline-on-migrate: true
+#  flyway:
+#    url: jdbc:postgresql://localhost:5432/postgres?ddl=true
+#    user: postgres
+#    password: password
+#    schemas: [public, safe, demos]
+#    mixed: true
+#    table: flyway_history
+#    clean-on-validation-error: true
+#    baseline-on-migrate: true
 #    init-sqls: CREATE SCHEMA IF NOT EXISTS public;
 #  datasource:
 #    hikari:
