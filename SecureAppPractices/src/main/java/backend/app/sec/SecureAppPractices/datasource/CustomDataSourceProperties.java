@@ -93,7 +93,7 @@ public class CustomDataSourceProperties {
         }
         else {
             if(this.overriddenTarget == null) System.out.println("Not one of the flags raised. Database from heroku.");
-            else System.out.println("Overridden target to LOCALHOST. this.overriddenTarget = " + this.overriddenTarget);
+            else System.out.println("Overridden target to Google Cloud Platform. this.overriddenTarget = " + this.overriddenTarget);
             this.jdbcUrl = this.gcpJdbcUrl;
             this.username = this.gcpUsername;
             this.password = this.gcpPassword;
