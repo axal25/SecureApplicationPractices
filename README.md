@@ -17,7 +17,14 @@ Project for Project study course in University. Online study platform teaching g
 [Response error handling](https://www.baeldung.com/spring-rest-template-error-handling) \
 [Spring boot tutorial](https://www.youtube.com/watch?v=vtPkZShrvXQ) \
 [Docker / PostgreSQL](https://www.youtube.com/watch?v=aHbE3pTyG-Q) \
-[Configuring a DataSource Programmatically in Spring Boot (Multiple Databases)](https://www.baeldung.com/spring-boot-configure-data-source-programmatic)
+[Configuring a DataSource Programmatically in Spring Boot (Multiple Databases)](https://www.baeldung.com/spring-boot-configure-data-source-programmatic) \
+[Flyway FAQ - Multiple Schemas](https://flywaydb.org/documentation/faq#multiple-schemas) \
+[Flyway Database Migrations](https://www.baeldung.com/database-migrations-with-flyway) \
+[Datasources](https://www.baeldung.com/spring-data-jpa-multiple-databases) \
+[Heroku relational database / env variables guide](https://devcenter.heroku.com/articles/connecting-to-relational-databases-on-heroku-with-java) \
+[Heroku deploy guide](https://devcenter.heroku.com/articles/deploying-spring-boot-apps-to-heroku) \
+[Google cloud platform - Postgres & Console](https://www.youtube.com/watch?v=wAV0KbrKXF8) \
+[Google cloud platform - Connecting to GCP Postgres with remote, external java application](https://cloud.google.com/sql/docs/postgres/connect-external-app?hl=pl#java)
 ---
 ### To do
     1. [DONE] Safe endpoints: GET (by id & all), POST, PUT, DELETE
@@ -80,7 +87,10 @@ or \
             3. `sudo sh get-docker.sh`
             4. Test installation with: \
             `make check`
-            5. To use docked as non-root user: \
+            5. To use docked as non-root user (you won't have to type `sudo` before every `docker` command): \
+            First check if docker group exists: \
+            `sudo groupadd docker` \
+            then: \
             `sudo usermod -aG docker YOUR_USER_NAME`
 5. Check docker installation using: \
     `docker -help` 
@@ -156,7 +166,58 @@ Result: `5432/tcp -> 0.0.0.0:5432`
 2. Connect from local machine to postgres instance inside of the docker container: \
 `psql -h localhost -p 5432 -U postgres` \
 Type your password
- 
+
+
+#### GCP (Google Cloud Platform) - Creating Postgres & connecting through Console
+1. (GCP) Navigation menu (Left-Top corner) > SQL > Create Instance > PostgreSQL > Next
+    1. Instance ID: YOUR_POSTGRES_NAME (gcp-remote-postgres)
+    2. Default user password: YOUR_POSTGRES_PASSWORD (ueaE3nlsxwBPobznEPNklHLz0cJ51Bc36tFzzswEkEEhlIHLI1yahmHBCsAzCvdp)
+    3. Region: europe-west1, Zone: Any
+    4. Database version: PostgreSQL 11
+2. Configuration options >  
+    1. Configure machine type and storage > 
+        1. Enable automatic storage increases
+    2. Enable auto backups and high availability > 
+        1. Automate backup
+        2. High availability (regional)
+3. Create > Wait for instance to prepare (Spinner will turn into green checkmark)
+4. Click on the created instance to go to instance details
+5. Click on 'Connect using Cloud Shell'
+6. Confirm prepared command by pressing enter
+    1. You may be greeted by message: \
+    `Cloud SQL Admin API has not been used in project 476885512536 before or it is disabled.` \
+    `Enable it by visiting https://console.developers.google.com/apis/api/sqladmin.googleapis.com/overview?project=476885512536 then retry.` \
+    `If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.`
+    2. Visit the link by clicking on it
+    3. Click 'Enable' on Cloud SQL Admin API
+    4. Retry previous command in GCP command line
+7. Enter YOUR_POSTGRES_PASSWORD
+8. Now you can work with your remote database
+
+#### GCP - Connecting from remote / external applications to GCP Postgres
+1. Determinate your IP address ([visit](http://ipv4.whatismyv6.com/)) (87.207.67.37)
+2. Authorize your application's IP address to connect to your instance. 
+    1. Go to the Cloud SQL Instances page in the Google Cloud Console.
+    2. Go to the Cloud SQL Instances page
+    3. Click the instance name to open its Instance details page.
+    4. Select the Connections tab.
+    5. Select the Public IP checkbox.
+    6. Click Add network.
+    7. In the Network field, enter the IP address or address range you want to allow connections from.
+        1. Use CIDR notation.
+        2. Optionally, enter a name for this entry.
+    8. Click Done.
+    9. Click Save to update the instance.
+3. You can find the IP address assigned to your instance in its Instance details page. \
+   This is the value you need for your application's connection string. \
+   Example:
+   Connect to the instance: \
+   Public IP adress `34.76.176.166` \
+   Connection instance name: `braided-tracker-259922:europe-west1:gcp-remote-postgres`
+4. Modify CustomDataSourceProperties.java
+
+
+
 ---
 ---
 ---
