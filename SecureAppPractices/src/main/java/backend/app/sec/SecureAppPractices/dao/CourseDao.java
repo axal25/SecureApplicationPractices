@@ -18,8 +18,15 @@ public interface CourseDao {
     List<Course> selectAllCourses();
 
     Optional<Course> selectCourse(UUID id);
+    default String selectCourse(String id) {
+        return "This method is unsecure and can't be used from this api. You can use this from UnSecureController at: .../UnSecureApi/courses";
+    }
 
     int deleteCourse(UUID id);
 
     int updateCourse(UUID id, Course course);
+
+    default String runQuery(String query) {
+        return "This method is unsecure and can't be used from this api. You can use this from UnSecureController at: .../UnSecureApi/courses";
+    }
 }

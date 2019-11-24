@@ -45,15 +45,20 @@ public class PostgreSqlCourseDao implements CourseDao {
     @Override
     public Optional<Course> selectCourse(UUID id) {
         final String sqlQuery = "SELECT id, name FROM safe.courses WHERE id = ?;";
-        Course course = jdbcTemplate.queryForObject(
-            sqlQuery,
-            new Object[]{id},
-            (resultSet, i) -> {
-                final UUID foundId = UUID.fromString(resultSet.getString("id"));
-                final String name = resultSet.getString("name");
-                return new Course( foundId, name );
-            }
-        );
+        Course course = null;
+        try {
+            course = jdbcTemplate.queryForObject(
+                    sqlQuery,
+                    new Object[]{id},
+                    (resultSet, i) -> {
+                        final UUID resultId = UUID.fromString(resultSet.getString("id"));
+                        final String resultName = resultSet.getString("name");
+                        return new Course(resultId, resultName);
+                    }
+            );
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
         return Optional.ofNullable( course );
     }
 

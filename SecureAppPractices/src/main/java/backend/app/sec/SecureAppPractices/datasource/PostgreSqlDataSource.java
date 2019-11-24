@@ -25,6 +25,7 @@ public class PostgreSqlDataSource {
     public Flyway flyway() {
         Flyway flyway = Flyway.configure().dataSource( hikariDataSource() )
                 .schemas( "safe" )
+                .schemas( "unsafe" )
                 .schemas( "demos" )
                 .schemas( "public" )
                 .mixed( true )
