@@ -171,7 +171,7 @@ Type your password
 #### GCP (Google Cloud Platform) - Creating Postgres & connecting through Console
 1. (GCP) Navigation menu (Left-Top corner) > SQL > Create Instance > PostgreSQL > Next
     1. Instance ID: YOUR_POSTGRES_NAME (gcp-remote-postgres)
-    2. Default user password: YOUR_POSTGRES_PASSWORD (ueaE3nlsxwBPobznEPNklHLz0cJ51Bc36tFzzswEkEEhlIHLI1yahmHBCsAzCvdp)
+    2. Default user password: YOUR_POSTGRES_PASSWORD (jacekoles_lukaszstawowy_studioprojektowe_2019)
     3. Region: europe-west1, Zone: Any
     4. Database version: PostgreSQL 11
 2. Configuration options >  

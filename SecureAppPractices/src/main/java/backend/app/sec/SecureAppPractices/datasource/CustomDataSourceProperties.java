@@ -18,7 +18,7 @@ public class CustomDataSourceProperties {
     private final String gcpDatabaseName = "";
     private final String gcpJdbcUrl = "jdbc:postgresql://" + gcpIpAddress + "/" + gcpDatabaseName + "?useSSL=false";
     private final String gcpUsername = "postgres";
-    private final String gcpPassword = "ueaE3nlsxwBPobznEPNklHLz0cJ51Bc36tFzzswEkEEhlIHLI1yahmHBCsAzCvdp";
+    private final String gcpPassword = "jacekoles_lukaszstawowy_studioprojektowe_2019";
 
     private final String gcpShellUsername = "emevig";
     private final String gcpUserPattern = this.gcpShellUsername;
