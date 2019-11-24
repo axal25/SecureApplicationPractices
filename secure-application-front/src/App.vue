@@ -1,32 +1,76 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view />
+  <div class="app-root">
+    <router-view></router-view>
+    <!-- theme setting -->
+    <v-btn
+      small
+      fab
+      dark
+      falt
+      fixed
+      top="top"
+      right="right"
+      class="setting-fab"
+      color="red"
+      @click="openThemeSettings"
+    >
+      <v-icon>settings</v-icon>
+    </v-btn>
+    <!-- setting drawer -->
+    <v-navigation-drawer
+      class="setting-drawer"
+      temporary
+      right
+      v-model="rightDrawer"
+      hide-overlay
+      fixed
+    >
+      <theme-settings></theme-settings>
+    </v-navigation-drawer>
+    <!-- global snackbar -->
+    <!-- <v-snackbar :timeout="3000" bottom right :color="snackbar.color" v-model="snackbar.show">
+      {{ snackbar.text }}
+      <v-btn dark flat @click.native="snackbar.show = false" icon>
+        <v-icon>close</v-icon>
+      </v-btn>
+    </v-snackbar>-->
   </div>
 </template>
 
-<style lang="scss">
-#app {
-  font-family: "Avenir", Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+<script>
+import ThemeSettings from "@/components/ThemeSettings"
+import AppEvents from "./event"
 
-#nav {
-  padding: 30px;
-
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
+export default {
+  components: {
+    ThemeSettings
+  },
+  data() {
+    return {
+      rightDrawer: false,
+      snackbar: {
+        show: false,
+        text: "",
+        color: ""
+      }
+    }
+  },
+  created() {
+    // add app events
+  },
+  methods: {
+    openThemeSettings() {
+      this.$vuetify.goTo(0)
+      this.rightDrawer = !this.rightDrawer
     }
   }
+}
+</script>
+
+<style scoped>
+.setting-fab {
+  top: 50% !important;
+  right: 0;
+  border-radius: 0;
 }
 </style>
