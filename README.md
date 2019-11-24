@@ -7,7 +7,7 @@ Project for Project study course in University. Online study platform teaching g
 
 ---
 ### Functionality
-
+Swagger api is available at [API](http://localhost:8080/swagger-ui.html#/course-controller)
 
 ---
 ### Useful links
