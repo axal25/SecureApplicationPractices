@@ -9,7 +9,6 @@
         <router-view></router-view>
       </div>
       <!-- App Footer -->
-      <v-footer height="auto" class="white pa-3 app--footer"></v-footer>
     </v-content>
     <!-- Go to top -->
     <app-fab></app-fab>
