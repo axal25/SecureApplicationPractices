@@ -11,20 +11,13 @@
       top="top"
       right="right"
       class="setting-fab"
-      color="red"
+      color="blue"
       @click="openThemeSettings"
     >
       <v-icon>settings</v-icon>
     </v-btn>
     <!-- setting drawer -->
-    <v-navigation-drawer
-      class="setting-drawer"
-      temporary
-      right
-      v-model="rightDrawer"
-      hide-overlay
-      fixed
-    >
+    <v-navigation-drawer class="setting-drawer" temporary right v-model="rightDrawer" hide-overlay fixed>
       <theme-settings></theme-settings>
     </v-navigation-drawer>
     <!-- global snackbar -->
@@ -39,7 +32,6 @@
 
 <script>
 import ThemeSettings from "@/components/ThemeSettings"
-import AppEvents from "./event"
 
 export default {
   components: {
@@ -67,10 +59,33 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 .setting-fab {
-  top: 50% !important;
+  top: 64px !important;
   right: 0;
   border-radius: 0;
+}
+
+body {
+  font-size: 16px;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #fafafa !important;
+}
+
+.app-root {
+  color: #2c3e50;
+  margin: 40px 40px 40px 40px;
+}
+
+h1 {
+  color: rgb(24, 12, 129);
+  font-weight: 700;
+}
+
+h2 {
+  color: blueviolet;
+  font-weight: 400;
 }
 </style>
