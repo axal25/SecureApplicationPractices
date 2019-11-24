@@ -1,4 +1,4 @@
-import { AuthLayout, DefaultLayout, ChatLayout } from "@/components/layouts"
+import { AuthLayout, DefaultLayout } from "@/components/layouts"
 
 export const publicRoute = [
   { path: "*", component: () => import(/* webpackChunkName: "errors-404" */ "@/views/error/NotFound.vue") },
