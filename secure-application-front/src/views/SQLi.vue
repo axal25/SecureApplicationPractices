@@ -10,7 +10,7 @@
 
     <h2>Jak się przejawia w kodzie</h2>
 
-    <p>Wszystkie przykłady są z Javy.</p>
+    <p>Wszystkie przykłady są z Javy, głównie dlatego, że ona służy nam jako backend</p>
 
     <textarea rows="7" cols="100" readonly="true" style="border:solid 2px black; margin: 5px;">
 public List<AccountDTO> unsafeFindAccountsByCustomerId(String customerId) throws SQLException {
@@ -38,16 +38,25 @@ public List<AccountDTO> unsafeJpaFindAccountsByCustomerId(String customerId) {
     <h2>Przyklad</h2>
     <p>
       Wyszukiwanie danych. Wyszukiwarki tego typu można znaleźć na wielu stronach, część z nich jest tak samo wrażliwa
-      na atak jak podany przykład. Twoim zadaniem jest zdobyć informacje na temat
-
+      na atak jak podany przykład. Twoim zadaniem jest dodanie nowego kursu za pomoca SQL Injection. Ponizszy formularz
+      przyjmuje nazwe kursu i w textarea pokazany jest wynik.
+      <br />Tabela do ktorej nalezy dodac kurs nosi nazwe: <b>"unsafe.courses"</b> i kursy mają strukturę:
+      <b>{ id: UUID, name: String }</b>
       <br />
-      <input v-model="query" type="text" placeholder="Szukaj uzytkownikow" class="form-control" />
+      <input v-model="query" type="text" placeholder="Szukaj kursow po nazwie" class="form-control" />
       <mdb-btn large color="primary" @click.native="search" style="border:solid 2px black; margin: 5px;"
         >Szukaj</mdb-btn
       >
       <mdb-btn large color="primary" @click.native="hint1" style="border:solid 2px black; margin: 5px;">Hint1</mdb-btn>
       <mdb-btn large color="primary" @click.native="hint2" style="border:solid 2px black; margin: 5px;">Hint2</mdb-btn>
-      <textarea v-model="posts" rows="7" cols="100" id="result" style="border:solid 2px black; margin: 5px;"></textarea>
+      <textarea
+        v-model="posts"
+        rows="7"
+        cols="100"
+        id="result"
+        readonly="true"
+        style="border:solid 2px black; margin: 5px;"
+      ></textarea>
     </p>
 
     <h2>Jak temu zapobiec</h2>
@@ -134,15 +143,21 @@ export default {
   }),
   methods: {
     search() {
-      axios.post("https://localhost:8080/courses/String/" + value).then(response => {
-        this.posts = response.data
-      })
+      axios
+        .get(
+          "http://localhost:8080/UnSecureApi/courses/query2?query=SELECT * FROM unsafe.courses WHERE name=" + this.query
+        )
+        .then(response => {
+          this.posts = response.data
+        })
     },
     hint1() {
-      alert("Hint 1 pressed")
+      alert(
+        "W SQLu dodawanie do tablicy wykonuje się poprzez klauzulę INSERT INTO {database_name}(dane1,dane2), kończenie jednej komendy następuje po znaku ';'"
+      )
     },
     hint2() {
-      alert("Hint 2 pressed")
+      alert("Wklej jako query: 'name; INSERT INTO unsafe.courses(d7e895a9,dup);'")
     }
   }
 }
