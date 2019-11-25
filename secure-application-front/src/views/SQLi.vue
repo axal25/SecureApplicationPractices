@@ -38,17 +38,23 @@ public List<AccountDTO> unsafeJpaFindAccountsByCustomerId(String customerId) {
     <h2>Przyklad</h2>
     <p>
       Wyszukiwanie danych. Wyszukiwarki tego typu można znaleźć na wielu stronach, część z nich jest tak samo wrażliwa
-      na atak jak podany przykład. Twoim zadaniem jest dodanie nowego kursu za pomoca SQL Injection. Ponizszy formularz
-      przyjmuje nazwe kursu i w textarea pokazany jest wynik.
+      na atak jak podany przykład. Twoim zadaniem jest usunięcie tabeli za pomoca SQL Injection. Uwaga, operacja jest
+      nieodwracalna i testowe dane powrócą dopiero po ponownym włączeniu backendu. Ponizszy formularz przyjmuje nazwe
+      kursu i w textarea pokazany jest wynik.
       <br />Tabela do ktorej nalezy dodac kurs nosi nazwe: <b>"unsafe.courses"</b> i kursy mają strukturę:
+      <!-- <br />Tabela do ktorej nalezy dodac kurs nosi nazwe: <b>"unsafe.courses"</b> i kursy mają strukturę: -->
       <b>{ id: UUID, name: String }</b>
       <br />
       <input v-model="query" type="text" placeholder="Szukaj kursow po nazwie" class="form-control" />
+      <mdb-btn large color="primary" @click.native="searchSafely" style="border:solid 2px black; margin: 5px;"
+        >Szukaj bezpiecznie</mdb-btn
+      >
       <mdb-btn large color="primary" @click.native="search" style="border:solid 2px black; margin: 5px;"
         >Szukaj</mdb-btn
       >
       <mdb-btn large color="primary" @click.native="hint1" style="border:solid 2px black; margin: 5px;">Hint1</mdb-btn>
       <mdb-btn large color="primary" @click.native="hint2" style="border:solid 2px black; margin: 5px;">Hint2</mdb-btn>
+      <br />
       <textarea
         v-model="posts"
         rows="7"
@@ -151,13 +157,24 @@ export default {
           this.posts = response.data
         })
     },
+    searchSafely() {
+      axios
+        .get("http://localhost:8080/api/courses/query2?query=SELECT * FROM unsafe.courses WHERE name=" + this.query)
+        .then(response => {
+          this.posts = response.data
+        })
+    },
     hint1() {
+      // alert(
+      //   "W SQLu dodawanie do tablicy wykonuje się poprzez klauzulę INSERT INTO {database_name}(dane1,dane2), kończenie jednej komendy następuje po znaku ';'"
+      // )
       alert(
-        "W SQLu dodawanie do tablicy wykonuje się poprzez klauzulę INSERT INTO {database_name}(dane1,dane2), kończenie jednej komendy następuje po znaku ';'"
+        "W SQLu usuwanie tabeli wykonuje sie poprzez klauzule DROP TABLE {tableName}, kończenie jednej komendy następuje po znaku ';'"
       )
     },
     hint2() {
-      alert("Wklej jako query: 'name; INSERT INTO unsafe.courses(d7e895a9,dup);'")
+      // alert("Wklej jako query: 'name; INSERT INTO unsafe.courses(d7e895a9,dup);'")
+      alert("Wklej jako query: 'name; DROP TABLE unsafe.courses;'")
     }
   }
 }
