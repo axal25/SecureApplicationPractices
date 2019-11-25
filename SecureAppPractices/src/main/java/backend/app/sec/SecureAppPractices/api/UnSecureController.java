@@ -38,4 +38,9 @@ public class UnSecureController {
     public String runQuery(@QueryParam("query") String query) {
         return courseDao.runQuery( query );
     }
+
+    @GetMapping(path = "/query2")
+    public String runQuery2(@QueryParam("query") String query) {
+        return courseDao.runQuery2( query );
+    }
 }

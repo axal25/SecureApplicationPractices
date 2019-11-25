@@ -5,11 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.sql.ResultSetMetaData;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Repository("UnSecurePostgreSqlCourseDao")
 public class UnSecurePostgreSqlCourseDao implements CourseDao {
@@ -34,13 +33,13 @@ public class UnSecurePostgreSqlCourseDao implements CourseDao {
                 (resultSet, i) -> {
                     final UUID id = UUID.fromString(resultSet.getString("id"));
                     final String name = resultSet.getString("name");
-                    return new Course( id, name );
+                    return new Course(id, name);
                 }
         );
     }
 
     @Override
-    public Optional<Course> selectCourse(UUID id){
+    public Optional<Course> selectCourse(UUID id) {
         final String sqlQuery = "SELECT id, name FROM unsafe.courses WHERE id = (CAST( ? AS VARCHAR ));";
         Course course = null;
         try {
@@ -53,10 +52,10 @@ public class UnSecurePostgreSqlCourseDao implements CourseDao {
                         return new Course(resultId, resultName);
                     }
             );
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        return Optional.ofNullable( course );
+        return Optional.ofNullable(course);
     }
 
     @Override
@@ -73,7 +72,7 @@ public class UnSecurePostgreSqlCourseDao implements CourseDao {
                         return new String("{ \"id\": \"" + resultId + "\", \"name\": \"" + resultName + "\" }");
                     }
             );
-        } catch(Exception e) {
+        } catch (Exception e) {
             response = e.toString();
             e.printStackTrace();
         }
@@ -95,11 +94,52 @@ public class UnSecurePostgreSqlCourseDao implements CourseDao {
         try {
             query = query.replaceFirst("^\"", "");
             query = query.replaceFirst("\"$", "");
-            jdbcTemplate.execute( query );
             return "Query has been run on schema 'unsafe': \n" + query;
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return "Query run has FAILED on schema 'unsafe': \n" + query;
         }
+    }
+
+    @Override
+    public String runQuery2(String query) {
+        query = query.replaceFirst("^\"", "");
+        query = query.replaceFirst("\"$", "");
+        String response = null;
+        try {
+            response = jdbcTemplate.queryForObject(
+                    query,
+                    new Object[]{},
+                    (resultSet, i) -> {
+                        ResultSetMetaData rsmd = resultSet.getMetaData();
+                        System.out.println("querying SELECT * FROM XXX");
+                        int columnsNumber = rsmd.getColumnCount();
+                        String value = "[";
+                        do {
+                            value += "{";
+                            for (int i1 = 1; i1 <= columnsNumber; i1++) {
+                                if (i1 > 1) {
+                                    value += ",  ";
+                                    System.out.print(",  ");
+                                }
+                                String columnValue = resultSet.getString(i1);
+                                System.out.print(columnValue + " " + rsmd.getColumnName(i1));
+                                value += rsmd.getColumnName(i1) + "=" + columnValue;
+                            }
+                            System.out.println("");
+                            value += "}";
+                        } while (resultSet.next());
+                        value += "]";
+                        return value;
+//                        final String resultId = resultSet.getString("id");
+//                        final String resultName = resultSet.getString("name");
+//                        return new String("{ \"id\": \"" + resultId + "\", \"name\": \"" + resultName + "\" }");
+                    }
+            );
+        } catch (Exception e) {
+            response = e.toString();
+            e.printStackTrace();
+        }
+        return response;
     }
 }

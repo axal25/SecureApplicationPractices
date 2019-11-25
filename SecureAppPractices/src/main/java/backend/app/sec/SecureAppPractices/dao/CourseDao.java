@@ -29,4 +29,8 @@ public interface CourseDao {
     default String runQuery(String query) {
         return "This method is unsecure and can't be used from this api. You can use this from UnSecureController at: .../UnSecureApi/courses";
     }
+
+    default String runQuery2(String query) {
+        return "This method is unsecure and can't be used from this api. You can use this from UnSecureController at: .../UnSecureApi/courses";
+    }
 }
