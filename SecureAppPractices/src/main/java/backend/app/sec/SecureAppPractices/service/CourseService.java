@@ -62,4 +62,6 @@ public class CourseService {
             return true;
         }
     }
+
+    public String runQuery2(String query) { return courseDao.runQuery2( query ); }
 }

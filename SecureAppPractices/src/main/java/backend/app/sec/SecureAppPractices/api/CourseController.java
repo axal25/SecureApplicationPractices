@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import javax.ws.rs.QueryParam;
 import java.util.List;
 import java.util.UUID;
 
@@ -40,4 +41,9 @@ public class CourseController {
 
     @PutMapping(path = "/{id}")
     public int updateCourse(@PathVariable("id") UUID id, @RequestBody @Valid @NotNull Course course) { return courseService.updateCourse( id, course ); }
+
+    @GetMapping(path = "/query2")
+    public String runQuery2(@QueryParam("query") String query) {
+        return courseService.runQuery2( query );
+    }
 }
