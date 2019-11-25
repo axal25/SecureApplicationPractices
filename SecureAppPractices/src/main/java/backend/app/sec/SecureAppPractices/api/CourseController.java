@@ -10,6 +10,7 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.UUID;
 
+@CrossOrigin
 @RequestMapping("api/courses")
 @RestController
 public class CourseController {

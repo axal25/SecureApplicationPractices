@@ -12,6 +12,7 @@ import javax.ws.rs.QueryParam;
 import java.util.List;
 import java.util.UUID;
 
+@CrossOrigin
 @RequestMapping("UnSecureApi/courses")
 @RestController
 public class UnSecureController {
