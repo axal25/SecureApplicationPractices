@@ -1,16 +1,10 @@
-DROP SCHEMA IF EXISTS demos CASCADE;
-CREATE SCHEMA IF NOT EXISTS demos;
-
 DROP SCHEMA IF EXISTS safe CASCADE;
 CREATE SCHEMA IF NOT EXISTS safe;
 
 DROP SCHEMA IF EXISTS unsafe CASCADE;
 CREATE SCHEMA IF NOT EXISTS unsafe;
 
-SET search_path TO "$user$", public, safe, unsafe, demos;
-
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
-ALTER EXTENSION "uuid-ossp" SET SCHEMA demos;
+SET search_path TO "$user$", public, safe, unsafe;
 
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 ALTER EXTENSION "uuid-ossp" SET SCHEMA safe;

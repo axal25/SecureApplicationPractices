@@ -1,6 +1,7 @@
 package backend.app.sec.SecureAppPractices.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.Gson;
 import lombok.Getter;
 
 import javax.validation.constraints.NotBlank;
@@ -21,5 +22,11 @@ public class Course {
     ) {
         this.id = id;
         this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        Gson gson = new Gson();
+        return gson.toJson(this);
     }
 }

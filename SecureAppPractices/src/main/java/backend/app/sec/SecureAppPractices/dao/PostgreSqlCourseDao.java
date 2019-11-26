@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.sql.ResultSetMetaData;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -64,6 +63,27 @@ public class PostgreSqlCourseDao implements CourseDao {
     }
 
     @Override
+    public String selectCourse(String stringId) {
+        final String sqlQuery = "SELECT id, name FROM safe.courses WHERE id = (CAST(? AS uuid));";
+        String course = null;
+        try {
+            course = jdbcTemplate.queryForObject(
+                    sqlQuery,
+                    new Object[]{stringId},
+                    (resultSet, i) -> {
+                        final UUID resultId = UUID.fromString(resultSet.getString("id"));
+                        final String resultName = resultSet.getString("name");
+                        return new Course(resultId, resultName).toString();
+                    }
+            );
+        } catch(Exception e) {
+            course = e.toString();
+            e.printStackTrace();
+        }
+        return course;
+    }
+
+    @Override
     public int deleteCourse(UUID id) {
         final String sqlQuery = "DELETE FROM safe.courses WHERE id = ?;";
         return jdbcTemplate.update(sqlQuery, id);
@@ -73,47 +93,5 @@ public class PostgreSqlCourseDao implements CourseDao {
     public int updateCourse(UUID id, Course course) {
         final String sqlQuery = "UPDATE safe.courses SET name = ? WHERE id = ?;";
         return jdbcTemplate.update(sqlQuery, course.getName(), id);
-    }
-
-    @Override
-    public String runQuery2(String query) {
-        query = query.replaceFirst("^\"", "");
-        query = query.replaceFirst("\"$", "");
-        String response = null;
-        try {
-            response = jdbcTemplate.queryForObject(
-                    query,
-                    new Object[]{},
-                    (resultSet, i) -> {
-                        ResultSetMetaData rsmd = resultSet.getMetaData();
-                        System.out.println("querying SELECT * FROM XXX");
-                        int columnsNumber = rsmd.getColumnCount();
-                        String value = "[";
-                        do {
-                            value += "{";
-                            for (int i1 = 1; i1 <= columnsNumber; i1++) {
-                                if (i1 > 1) {
-                                    value += ",  ";
-                                    System.out.print(",  ");
-                                }
-                                String columnValue = resultSet.getString(i1);
-                                System.out.print(columnValue + " " + rsmd.getColumnName(i1));
-                                value += rsmd.getColumnName(i1) + "=" + columnValue;
-                            }
-                            System.out.println("");
-                            value += "}";
-                        } while (resultSet.next());
-                        value += "]";
-                        return value;
-//                        final String resultId = resultSet.getString("id");
-//                        final String resultName = resultSet.getString("name");
-//                        return new String("{ \"id\": \"" + resultId + "\", \"name\": \"" + resultName + "\" }");
-                    }
-            );
-        } catch (Exception e) {
-            response = e.toString();
-            e.printStackTrace();
-        }
-        return response;
     }
 }

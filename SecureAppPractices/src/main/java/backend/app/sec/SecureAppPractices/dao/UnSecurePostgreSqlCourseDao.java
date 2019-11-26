@@ -22,7 +22,12 @@ public class UnSecurePostgreSqlCourseDao implements CourseDao {
 
     @Override
     public int insertCourse(UUID id, Course course) {
-        return 0;
+        final String sqlQuery = "INSERT INTO unsafe.courses (id, name) VALUES (CAST(? AS VARCHAR ), ?)";
+        return jdbcTemplate.update(
+                sqlQuery,
+                course.getId(),
+                course.getName()
+        );
     }
 
     @Override
@@ -81,16 +86,18 @@ public class UnSecurePostgreSqlCourseDao implements CourseDao {
 
     @Override
     public int deleteCourse(UUID id) {
-        return 0;
+        final String sqlQuery = "DELETE FROM unsafe.courses WHERE id = ?;";
+        return jdbcTemplate.update(sqlQuery, id);
     }
 
     @Override
     public int updateCourse(UUID id, Course course) {
-        return 0;
+        final String sqlQuery = "UPDATE unsafe.courses SET name = ? WHERE id = ?;";
+        return jdbcTemplate.update(sqlQuery, course.getName(), id);
     }
 
     @Override
-    public String runQuery(String query) {
+    public String runExecuteGetsNoResultsFromDatabase(String query) {
         try {
             query = query.replaceFirst("^\"", "");
             query = query.replaceFirst("\"$", "");
@@ -102,44 +109,40 @@ public class UnSecurePostgreSqlCourseDao implements CourseDao {
     }
 
     @Override
-    public String runQuery2(String query) {
+    public String runQueryGetsResultsFromDatabase(String query) {
         query = query.replaceFirst("^\"", "");
         query = query.replaceFirst("\"$", "");
-        String response = null;
+        StringBuilder response = null;
         try {
-            response = jdbcTemplate.queryForObject(
+            List<String> listOfJsonObjects = jdbcTemplate.query(
                     query,
-                    new Object[]{},
                     (resultSet, i) -> {
-                        ResultSetMetaData rsmd = resultSet.getMetaData();
-                        System.out.println("querying SELECT * FROM XXX");
-                        int columnsNumber = rsmd.getColumnCount();
-                        String value = "[";
-                        do {
-                            value += "{";
-                            for (int i1 = 1; i1 <= columnsNumber; i1++) {
-                                if (i1 > 1) {
-                                    value += ",  ";
-                                    System.out.print(",  ");
-                                }
-                                String columnValue = resultSet.getString(i1);
-                                System.out.print(columnValue + " " + rsmd.getColumnName(i1));
-                                value += rsmd.getColumnName(i1) + "=" + columnValue;
-                            }
-                            System.out.println("");
-                            value += "}";
-                        } while (resultSet.next());
-                        value += "]";
-                        return value;
-//                        final String resultId = resultSet.getString("id");
-//                        final String resultName = resultSet.getString("name");
-//                        return new String("{ \"id\": \"" + resultId + "\", \"name\": \"" + resultName + "\" }");
+                        StringBuilder jsonObject = new StringBuilder().append("{");
+                        ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
+                        for(i=1; i<=resultSetMetaData.getColumnCount(); i++) {
+                            if(i!=1) jsonObject.append(", ");
+                            jsonObject.append(resultSetMetaData.getColumnName(i)).append(": ").append(resultSet.getString(i));
+                        }
+                        jsonObject.append("}");
+                        String correctJson = jsonObject.toString().replaceAll(
+                                "(?<=\\{|, ?)([a-zA-Z]+?): ?(?![ \\{\\[])(.+?)(?=,|})", "\"$1\": \"$2\"");
+                        return correctJson;
                     }
             );
-        } catch (Exception e) {
-            response = e.toString();
-            e.printStackTrace();
+            for (String jsonObject : listOfJsonObjects ) {
+                if(response == null) response = new StringBuilder().append("[");
+                else response.append(", ");
+                response.append(jsonObject);
+            }
+            response.append("]");
+        } catch (Exception e1) {
+            try {
+                return runExecuteGetsNoResultsFromDatabase( query );
+            } catch(Exception e2) {
+                response = new StringBuilder().append(e1.toString()).append("\n").append(e2.toString());
+                e1.printStackTrace();
+            }
         }
-        return response;
+        return response.toString();
     }
 }

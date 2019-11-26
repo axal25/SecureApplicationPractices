@@ -32,8 +32,10 @@ public class PostgreSqlDataSource {
                 .baselineOnMigrate( true )
                 .table( "flyway_history" )
                 .cleanOnValidationError( true )
-//                .initSql( "ALTER ROLE " + customDataSourceProperties.getUsername() + " SUPERUSER;" )
+                .cleanDisabled( false )
+//                .initSql( "" )
                 .load();
+        flyway.clean();
         flyway.migrate();
         return flyway;
     }

@@ -1,6 +1,10 @@
 package backend.app.sec.SecureAppPractices.configuration;
 
+import backend.app.sec.SecureAppPractices.api.SecureCourseController;
+import backend.app.sec.SecureAppPractices.api.UnSecureCourseController;
+import backend.app.sec.SecureAppPractices.model.Course;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -10,6 +14,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @Configuration
 @EnableSwagger2
+@ComponentScan("backend.app.sec.SecureAppPractices.api")
 public class SwaggerConfig {
     @Bean
     public Docket api() {

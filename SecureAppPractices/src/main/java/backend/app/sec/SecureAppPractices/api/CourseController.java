@@ -1,8 +1,6 @@
 package backend.app.sec.SecureAppPractices.api;
 
 import backend.app.sec.SecureAppPractices.model.Course;
-import backend.app.sec.SecureAppPractices.service.CourseService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -11,39 +9,35 @@ import javax.ws.rs.QueryParam;
 import java.util.List;
 import java.util.UUID;
 
-@CrossOrigin
-@RequestMapping("api/courses")
-@RestController
-public class CourseController {
-
-    private final CourseService courseService;
-
-    @Autowired
-    public CourseController(CourseService courseService) {
-        this.courseService = courseService;
-    }
+public interface CourseController {
+    public static final String selectCourseAsCourseMapping = "/asUUID/{id}";
+    public static final String selectCourseAsStringMapping = "/asString/{id}";
+    public static final String deleteCourseMapping = "/{id}";
+    public static final String updateCourseCourseMapping = "/{id}";
+    public static final String runExecuteGetsNoResultsFromDatabaseMapping = "/runExecuteGetsNoResultsFromDatabase";
+    public static final String runQueryGetsResultsFromDatabaseMapping = "/runQueryGetsResultsFromDatabase";
 
     @PostMapping
-    public void insertCourse(@RequestBody @Valid @NotNull  Course course) {
-        courseService.insertCourse( course );
-    }
+    public void insertCourse(@RequestBody @Valid @NotNull Course course);
 
     @GetMapping
-    public List<Course> selectAllCourses() {
-        return courseService.selectAllCourses();
-    }
+    public List<Course> selectAllCourses();
 
-    @GetMapping(path = "/{id}")
-    public Course selectCourse(@PathVariable("id") UUID id) { return courseService.selectCourse( id ).orElse( null ); }
+    @GetMapping(path = CourseController.selectCourseAsCourseMapping)
+    public Course selectCourse(@PathVariable("id") UUID id);
 
-    @DeleteMapping(path = "/{id}")
-    public void deleteCourse(@PathVariable("id") UUID id) { courseService.deleteCourse( id ); }
+    @GetMapping(path = CourseController.selectCourseAsStringMapping)
+    public String selectCourse(@PathVariable("id") String stringId);
 
-    @PutMapping(path = "/{id}")
-    public int updateCourse(@PathVariable("id") UUID id, @RequestBody @Valid @NotNull Course course) { return courseService.updateCourse( id, course ); }
+    @DeleteMapping(path = CourseController.deleteCourseMapping)
+    public void deleteCourse(@PathVariable("id") UUID id);
 
-    @GetMapping(path = "/query2")
-    public String runQuery2(@QueryParam("query") String query) {
-        return courseService.runQuery2( query );
-    }
+    @PutMapping(path = CourseController.updateCourseCourseMapping)
+    public int updateCourse(@PathVariable("id") UUID id, @RequestBody @Valid @NotNull Course course);
+
+    @GetMapping(path = CourseController.runExecuteGetsNoResultsFromDatabaseMapping)
+    public String runExecuteGetsNoResultsFromDatabase(@QueryParam("query") String query);
+
+    @GetMapping(path = CourseController.runQueryGetsResultsFromDatabaseMapping)
+    public String runQueryGetsResultsFromDatabase(@QueryParam("query") String query);
 }

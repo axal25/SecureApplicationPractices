@@ -24,7 +24,8 @@ Swagger api is available at [API](http://localhost:8080/swagger-ui.html#/course-
 [Heroku relational database / env variables guide](https://devcenter.heroku.com/articles/connecting-to-relational-databases-on-heroku-with-java) \
 [Heroku deploy guide](https://devcenter.heroku.com/articles/deploying-spring-boot-apps-to-heroku) \
 [Google cloud platform - Postgres & Console](https://www.youtube.com/watch?v=wAV0KbrKXF8) \
-[Google cloud platform - Connecting to GCP Postgres with remote, external java application](https://cloud.google.com/sql/docs/postgres/connect-external-app?hl=pl#java)
+[Google cloud platform - Connecting to GCP Postgres with remote, external java application](https://cloud.google.com/sql/docs/postgres/connect-external-app?hl=pl#java) \
+[Fake json - double quotes in java json string](https://stackoverflow.com/questions/54584696/how-add-quotes-in-a-json-string-using-java-when-the-value-is-a-date)
 ---
 ### To do
     1. [DONE] Safe endpoints: GET (by id & all), POST, PUT, DELETE
