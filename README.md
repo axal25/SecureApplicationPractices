@@ -20,17 +20,21 @@ Swagger api is available at [API](http://localhost:8080/swagger-ui.html#/course-
 [Configuring a DataSource Programmatically in Spring Boot (Multiple Databases)](https://www.baeldung.com/spring-boot-configure-data-source-programmatic) \
 [Flyway FAQ - Multiple Schemas](https://flywaydb.org/documentation/faq#multiple-schemas) \
 [Flyway Database Migrations](https://www.baeldung.com/database-migrations-with-flyway) \
-[Datasources](https://www.baeldung.com/spring-data-jpa-multiple-databases) \
+[Multiple DataSources](https://www.baeldung.com/spring-data-jpa-multiple-databases) \
 [Heroku relational database / env variables guide](https://devcenter.heroku.com/articles/connecting-to-relational-databases-on-heroku-with-java) \
 [Heroku deploy guide](https://devcenter.heroku.com/articles/deploying-spring-boot-apps-to-heroku) \
 [Google cloud platform - Postgres & Console](https://www.youtube.com/watch?v=wAV0KbrKXF8) \
 [Google cloud platform - Connecting to GCP Postgres with remote, external java application](https://cloud.google.com/sql/docs/postgres/connect-external-app?hl=pl#java) \
 [Fake json - double quotes in java json string](https://stackoverflow.com/questions/54584696/how-add-quotes-in-a-json-string-using-java-when-the-value-is-a-date)
+[Google cloud platform - Connecting Engine App to Cloud SQL - Datasource](https://cloud.google.com/sql/docs/mysql/connect-app-engine) \
+[Google cloud platform - Connecting Engine App to Cloud SQL - IAM Permissions](https://cloud.google.com/compute/docs/access/iam-permissions) \
+[Google cloud platform - Connecting Engine App to Cloud SQL - Cloud SQL Roles](https://cloud.google.com/iam/docs/understanding-roles#cloud-sql-roles)
 ---
 ### To do
     1. [DONE] Safe endpoints: GET (by id & all), POST, PUT, DELETE
-    2. Endpoinds exposed to SQLi (SQL Injection)
-        1. Creating on request new database - for 1 user to play around
+    2. [DONE] Endpoinds exposed to SQLi (SQL Injection)
+        1. Adding and modifying
+    3. Creating on request new database - for 1 user to play around
 
 ### To run JAR file
 1. right-click `target` folder or open in terminal `cd ~/IdeaProjects/SecureAppPractices/target$ `
@@ -231,11 +235,35 @@ Type your password
         1. Click `Let's start`
         2. Again, choose programming language and environment (Java, Standard)
 6. Click 'google cloud console' icon in the top right corner next to notification icon
-7. Clone your repository from github \ 
+8. Let your App Engine connect to Postgres SQL database on GCP
+    1. Go to (GCP) Navigation menu (Hamburger menu - 3 horizontal lines - Left-Top corner)
+    2. Administration > Permissions 
+    3. In the overview you should be seeing table view of \
+    `Permission in project "YOUR_PROJECT_NAME"` 
+    4. Check row containing
+    `App Engine default service account` | `braided-tracker-259922@appspot.gserviceaccount.com `   
+    for `Cloud SQL` roles
+        1. Click edit icon (pencil) in the last column of the row
+        2. Click add another role
+        3. Choose `Cloud SQL` and then `Admin`, `Editor` or `Client`
+        4. Now that role show for example `Cloud SQL Admin` safe change with `safe` button
+7. Clone your repository from github   
 `git clone https://github.com/axal25/SecureApplicationPractices.git`
 8. Change folders to your github local repository location \
-`cd SecureApplicationPractices`
+`cd SecureApplicationPractices/SecureAppPractices`
 9. Compile with maven so it contains .jar
+    1. First change jdk from 8 (default) to 11 \
+    `sudo update-java-alternatives -s java-1.11.0-openjdk-amd64 && export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64`\
+        1. Ignore error:  
+        `update-alternatives: error: no alternatives for mozilla-javaplugin.so`
+        1. To go back: \
+        `sudo update-java-alternatives -s java-1.8.0-openjdk-amd64 && export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/jre`
+        3. Confirm with: \
+        `mvn -v` \
+        `java -version` \
+        `javac -version`
+    2. Then  
+    `mvn clean install`
 10. Initialize google cloud api \
 `gcloud init`
 11. Answer 'Pick configuration to use'

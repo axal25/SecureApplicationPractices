@@ -17,7 +17,7 @@ public class PostgreSqlDataSource {
     @Autowired
     PostgreSqlDataSource( Environment env ) {
         this.env = env;
-        customDataSourceProperties  = new CustomDataSourceProperties( env );
+        this.customDataSourceProperties = tryInitCustomDataSourceProperties();
     }
 
     @Primary
@@ -48,7 +48,14 @@ public class PostgreSqlDataSource {
         hikariDataSource.setUsername( customDataSourceProperties.getUsername() );
         hikariDataSource.setPassword( customDataSourceProperties.getPassword() );
         hikariDataSource.setDriverClassName( customDataSourceProperties.getDriverClassName() );
-        hikariDataSource.setSchema( "safe" );
+        if( customDataSourceProperties.getSocketFactory() != null &&
+                customDataSourceProperties.getCloudSqlInstance() != null &&
+                customDataSourceProperties.getUseSSL() != null ) {
+            hikariDataSource.addDataSourceProperty("socketFactory", customDataSourceProperties.getSocketFactory());
+            hikariDataSource.addDataSourceProperty("cloudSqlInstance", customDataSourceProperties.getCloudSqlInstance());
+            hikariDataSource.addDataSourceProperty("useSSL", customDataSourceProperties.getUseSSL());
+        }
+        hikariDataSource.setSchema( "safe" ); // POTRZEBNE?
         hikariDataSource.setMaximumPoolSize(30);
 
         return hikariDataSource;
@@ -62,4 +69,14 @@ public class PostgreSqlDataSource {
 //                .type(HikariDataSource.class)
 //                .build();
 //    }
+
+    private CustomDataSourceProperties tryInitCustomDataSourceProperties() {
+        CustomDataSourceProperties tryCustomDataSourceProperties = null;
+        try {
+            return new CustomDataSourceProperties( env );
+        } catch (Exception e) {
+            System.err.println("\n\n\n[ERROR] Exception inside CustomDataSourceProperties customDataSourceProperties = new CustomDataSourceProperties( env )\n\n\n");
+            return null;
+        }
+    }
 }
