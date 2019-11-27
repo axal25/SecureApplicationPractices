@@ -4,7 +4,6 @@ import backend.app.sec.SecureAppPractices.dao.CourseDao;
 import backend.app.sec.SecureAppPractices.model.Course;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -31,7 +30,7 @@ public class UnSecureCourseController implements CourseController {
     public List<Course> selectAllCourses() { return courseDao.selectAllCourses(); }
 
     @Override
-    @GetMapping(path = CourseController.selectCourseAsCourseMapping)
+    @GetMapping(path = CourseController.selectCourseAsUUIDMapping)
     public Course selectCourse(@PathVariable("id") UUID id) { return courseDao.selectCourse( id ).orElse( null ); }
 
     @Override

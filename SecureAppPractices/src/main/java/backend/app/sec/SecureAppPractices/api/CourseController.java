@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.UUID;
 
 public interface CourseController {
-    public static final String selectCourseAsCourseMapping = "/asUUID/{id}";
+    public static final String selectCourseAsUUIDMapping = "/asUUID/{id}";
     public static final String selectCourseAsStringMapping = "/asString/{id}";
     public static final String deleteCourseMapping = "/{id}";
     public static final String updateCourseCourseMapping = "/{id}";
@@ -23,7 +23,7 @@ public interface CourseController {
     @GetMapping
     public List<Course> selectAllCourses();
 
-    @GetMapping(path = CourseController.selectCourseAsCourseMapping)
+    @GetMapping(path = CourseController.selectCourseAsUUIDMapping)
     public Course selectCourse(@PathVariable("id") UUID id);
 
     @GetMapping(path = CourseController.selectCourseAsStringMapping)

@@ -30,7 +30,7 @@ public class SecureCourseController implements CourseController {
     public List<Course> selectAllCourses() { return secureCourseService.selectAllCourses(); }
 
     @Override
-    @GetMapping(path = CourseController.selectCourseAsCourseMapping)
+    @GetMapping(path = CourseController.selectCourseAsUUIDMapping)
     public Course selectCourse(@PathVariable("id") UUID id) { return secureCourseService.selectCourse( id ).orElse( null ); }
 
     @Override

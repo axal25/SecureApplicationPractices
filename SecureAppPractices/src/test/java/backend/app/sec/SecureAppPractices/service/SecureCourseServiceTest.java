@@ -109,12 +109,15 @@ public class SecureCourseServiceTest {
     void deleteCourse() {
         final String courseName = "Test Course inserted from SecureCourseServiceTest #";
         List<Course> listOfCourses = secureCourseService.selectAllCourses();
+        courseNameCounter = listOfCourses.size() + 1 - courseAmount;
         courseAmount = listOfCourses.size();
         assertNotNull(listOfCourses);
         assertFalse(listOfCourses.isEmpty());
         assertTrue(listOfCourses.size() >= 1);
         Course course = listOfCourses.get(listOfCourses.size() - 1);
-        secureCourseService.deleteCourse(course.getId());
+        boolean removeBoolResult = listOfCourses.remove(course);
+        int removeIntResult = removeBoolResult ? 1 : 0;
+        assertEquals(removeIntResult, secureCourseService.deleteCourse(course.getId()));
         listOfCourses = secureCourseService.selectAllCourses();
         courseAmount--;
         assertNotNull(listOfCourses);
@@ -139,10 +142,11 @@ public class SecureCourseServiceTest {
 
     @DisplayName("updateCourse")
     @Test
-    @Order(4)
+    @Order(5)
     void updateCourse() {
         List<Course> listOfCourses = secureCourseService.selectAllCourses();
-        courseNameCounter = listOfCourses.size() - courseAmount;
+        courseNameCounter = listOfCourses.size() + 1 - courseAmount;
+        courseAmount = listOfCourses.size();
         Course course = listOfCourses.get(listOfCourses.size()-1);
         Course modifiedCourse = new Course(course.getId(), courseName + courseNameCounter);
         courseNameCounter++;
