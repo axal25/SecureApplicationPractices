@@ -26,8 +26,8 @@ public class CustomDataSourceProperties {
     private final String gcpPwdPattern = "/home/" + gcpShellUsername;
     private final String gcpHomePattern = "/home/" + gcpShellUsername;
 
-    private final String overriddenTarget = "localhost";
-//    private final String overriddenTarget = "gcp";
+//    private final String overriddenTarget = "localhost";
+    private final String overriddenTarget = "gcp";
 //    private final String overriddenTarget = null;
 
     @Getter

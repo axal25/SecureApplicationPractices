@@ -170,7 +170,7 @@ Type your password
 
 
 #### GCP (Google Cloud Platform) - Creating Postgres & connecting through Console
-1. (GCP) Navigation menu (Left-Top corner) > SQL > Create Instance > PostgreSQL > Next
+1. (GCP) Navigation menu (Hamburger menu - 3 horizontal lines - Left-Top corner) > SQL > Create Instance > PostgreSQL > Next
     1. Instance ID: YOUR_POSTGRES_NAME (gcp-remote-postgres)
     2. Default user password: YOUR_POSTGRES_PASSWORD (jacekoles_lukaszstawowy_studioprojektowe_2019)
     3. Region: europe-west1, Zone: Any
@@ -217,8 +217,36 @@ Type your password
    Connection instance name: `braided-tracker-259922:europe-west1:gcp-remote-postgres`
 4. Modify CustomDataSourceProperties.java
 
-
-
+#### GCP (Google Cloud Platform) - Creating remote App & connecting through Console
+1. (GCP) Navigation menu (Hamburger menu - 3 horizontal lines - Left-Top corner) > Compute > App Engine > Panel > Create instance
+2. Choose region: europe-west > Next
+3. Choose programming language: Java, Environment: Standard
+    1. [Documentation for Java in App Engine](https://cloud.google.com/appengine/docs/standard/java/?hl=pl)
+    2. [Code samples in standard Java](https://github.com/GoogleCloudPlatform/java-docs-samples/)
+    3. [Download Cloud SDK](https://cloud.google.com/sdk/?hl=pl)
+4. Click `I'll do it later` 
+5. You will get message: \
+"Your application App Engine has been created. To help you deploy your application we can direct to recommended resources depending on programming language use by you."
+    1. If you'd like to go back to previous screen:
+        1. Click `Let's start`
+        2. Again, choose programming language and environment (Java, Standard)
+6. Click 'google cloud console' icon in the top right corner next to notification icon
+7. Clone your repository from github \ 
+`git clone https://github.com/axal25/SecureApplicationPractices.git`
+8. Change folders to your github local repository location \
+`cd SecureApplicationPractices`
+9. Compile with maven so it contains .jar
+10. Initialize google cloud api \
+`gcloud init`
+11. Answer 'Pick configuration to use'
+12. Answer 'Confirm email address'
+13. Answer 'Pick cloud project'
+14. Deploy application \
+`gcloud app deploy`
+15. Answer 'Services to deploy'
+16. Deploying ... Done! \
+Type `gcloud app browse`
+17. Enter the address to your browser
 ---
 ---
 ---

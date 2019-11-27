@@ -63,14 +63,34 @@ public class UnSecurePostgreSqlCourseDao implements CourseDao {
         return Optional.ofNullable(course);
     }
 
+//    @Override
+//    public String selectCourse(String id) {
+//        final String sqlQuery = "SELECT id, name FROM unsafe.courses WHERE id = ?;";
+//        String response = null;
+//        try {
+//            response = jdbcTemplate.queryForObject(
+//                    sqlQuery,
+//                    new Object[]{id},
+//                    (resultSet, i) -> {
+//                        final String resultId = resultSet.getString("id");
+//                        final String resultName = resultSet.getString("name");
+//                        return new String("{ \"id\": \"" + resultId + "\", \"name\": \"" + resultName + "\" }");
+//                    }
+//            );
+//        } catch (Exception e) {
+//            response = e.toString();
+//            e.printStackTrace();
+//        }
+//        return response;
+//    }
+
     @Override
     public String selectCourse(String id) {
-        final String sqlQuery = "SELECT id, name FROM unsafe.courses WHERE id = ?;";
+        final String sqlQuery = "SELECT id, name FROM unsafe.courses WHERE id = " + id + ";";
         String response = null;
         try {
             response = jdbcTemplate.queryForObject(
                     sqlQuery,
-                    new Object[]{id},
                     (resultSet, i) -> {
                         final String resultId = resultSet.getString("id");
                         final String resultName = resultSet.getString("name");
