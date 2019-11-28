@@ -265,18 +265,21 @@ Type your password
         `java -version` \
         `javac -version`
     2. Then  
-    `mvn clean install`
+    `mvn clean install -DskipTests`
 10. Initialize google cloud api \
 `gcloud init`
 11. Answer 'Pick configuration to use'
 12. Answer 'Confirm email address'
 13. Answer 'Pick cloud project'
 14. Deploy application \
-`gcloud app deploy`
-15. Answer 'Services to deploy'
-16. Deploying ... Done! \
+`mvn appengine:deploy` 
+    1. If that doesn't work try `gcloud app deploy`
+    2. Answer 'Services to deploy'
+    3. Deploying ... Done! \
 Type `gcloud app browse`
 17. Enter the address to your browser
+18. In case of issues:
+`gcloud app logs tail -s default`
 ---
 ---
 ---
