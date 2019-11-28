@@ -30,7 +30,7 @@ public class CustomDataSourceProperties {
     private static final String gcpPassword = "jacekoles_lukaszstawowy_studioprojektowe_2019";
 
     private static final String gcpToGcpJdbcUrl = "jdbc:postgresql:///" + gcpDatabaseName + "?useSSL=false";
-    private static final String gcpToGcpSocketFactory = "com.google.cloud.sql.mysql.SocketFactory";
+    private static final String gcpToGcpSocketFactory = "com.google.cloud.sql.postgres.SocketFactory";
     private static final String gcpToGcpInstanceConnectionName = "braided-tracker-259922:europe-west1:gcp-remote-postgres";
     private static final String gcpToGcpUseSSL = "false";
 
