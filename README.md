@@ -28,9 +28,12 @@ Swagger api is available at [API](http://localhost:8080/swagger-ui.html#/course-
 [Fake json - double quotes in java json string](https://stackoverflow.com/questions/54584696/how-add-quotes-in-a-json-string-using-java-when-the-value-is-a-date)
 [Google cloud platform - Connecting Engine App to Cloud SQL - Datasource](https://cloud.google.com/sql/docs/mysql/connect-app-engine) \
 [Google cloud platform - Connecting Engine App to Cloud SQL - IAM Permissions](https://cloud.google.com/compute/docs/access/iam-permissions) \
-[Google cloud platform - Connecting Engine App to Cloud SQL - Cloud SQL Roles](https://cloud.google.com/iam/docs/understanding-roles#cloud-sql-roles)
+[Google cloud platform - Connecting Engine App to Cloud SQL - Cloud SQL Roles](https://cloud.google.com/iam/docs/understanding-roles#cloud-sql-roles) \
 [Google cloud platform - Connecting Engine App to Cloud SQL - Deployment descriptor .yaml / .xml](https://cloud.google.com/appengine/docs/flexible/java/configuring-your-app-with-app-yaml)
-[Google cloud platform - Connecting Engine App to Cloud SQL - Spring boot quickstart](https://cloud.google.com/appengine/docs/flexible/java/quickstart)
+[Google cloud platform - Connecting Engine App to Cloud SQL - Spring boot quickstart](https://cloud.google.com/appengine/docs/flexible/java/quickstart) \
+[Google cloud platform - Connecting Engine App to Cloud SQL - Spring - Unix Postgres Socket](https://cloud.google.com/sql/docs/postgres/connect-app-engine) \
+[Java - Environment properties](https://stackoverflow.com/questions/23506471/spring-access-all-environment-properties-as-a-map-or-properties-object) \
+[Programmatically change Spring boot Application listening port](https://www.baeldung.com/spring-boot-change-port)
 ---
 ### To do
     1. [DONE] Safe endpoints: GET (by id & all), POST, PUT, DELETE
