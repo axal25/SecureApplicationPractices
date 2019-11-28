@@ -76,6 +76,7 @@ public class PostgreSqlDataSource {
             return new CustomDataSourceProperties( env );
         } catch (Exception e) {
             System.err.println("\n\n\n[ERROR] Exception inside CustomDataSourceProperties customDataSourceProperties = new CustomDataSourceProperties( env )\n\n\n");
+            e.printStackTrace();
             return null;
         }
     }

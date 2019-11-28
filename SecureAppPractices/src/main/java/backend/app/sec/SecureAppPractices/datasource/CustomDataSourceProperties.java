@@ -25,10 +25,10 @@ public class CustomDataSourceProperties {
     private static final String gcpToGcpInstanceConnectionName = "braided-tracker-259922:europe-west1:gcp-remote-postgres";
     private static final String gcpToGcpUseSSL = "false";
 
-    private static final String gcpShellUsername = "emevig";
+    private static final String gcpShellUsername = null; // "emevig";
     private static final String gcpUserPattern = CustomDataSourceProperties.gcpShellUsername;
-    private static final String gcpGoPathPattern = "/home/" + gcpShellUsername + "/gopath:/google/gopath";
-    private static final String gcpHomePattern = "/home/" + gcpShellUsername;
+    private static final String gcpGoPathPattern = null; // "/home/" + gcpShellUsername + "/gopath:/google/gopath";
+    private static final String gcpHomePattern = "/root";// "/home/" + gcpShellUsername;
 
 //    private static final String target = "localhost";
     private static final String databaseLocation = "gcp";
@@ -129,13 +129,9 @@ public class CustomDataSourceProperties {
             gcpHome = env.getProperty("HOME");
         }
 
-        boolean userCheckFlag = true;
-        boolean goPathCheckFlag = true;
-        boolean homeCheckFlag = true;
-
-        if(gcpUser != null && gcpUser.compareTo(CustomDataSourceProperties.gcpUserPattern) == 0) userCheckFlag = false;
-        if(gcpGoPath != null && gcpGoPath.compareTo(CustomDataSourceProperties.gcpGoPathPattern) == 0) goPathCheckFlag = false;
-        if(gcpHome != null && gcpHome.compareTo(CustomDataSourceProperties.gcpHomePattern) == 0) homeCheckFlag = false;
+        boolean userCheckFlag = getFlag( gcpUser, CustomDataSourceProperties.gcpUserPattern );
+        boolean goPathCheckFlag = getFlag( gcpGoPath, CustomDataSourceProperties.gcpGoPathPattern );
+        boolean homeCheckFlag = getFlag( gcpHome, CustomDataSourceProperties.gcpHomePattern );
 
         debugFeed(env, userCheckFlag, goPathCheckFlag, homeCheckFlag,
                 gcpUser, gcpGoPath, gcpHome);
@@ -148,6 +144,15 @@ public class CustomDataSourceProperties {
             this.appDeploymentLocation = "gcp";
             System.out.println("One of the flags raised. Application location = " + this.appDeploymentLocation + ". this.appDeploymentLocation = " + this.appDeploymentLocation);
         }
+    }
+
+    private boolean getFlag(String gcpProperty, String gcpPattern) {
+        boolean flag = true;
+
+        if(gcpProperty != null && gcpPattern != null && gcpProperty.compareTo(gcpPattern) == 0) flag = false;
+        if(gcpProperty == null || gcpPattern == null) if(gcpProperty != gcpPattern) flag = false;
+
+        return flag;
     }
 
     private void debugFeed(Environment env, boolean userCheckFlag, boolean goPathCheckFlag, boolean homeCheckFlag,
