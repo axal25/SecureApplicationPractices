@@ -1,7 +1,16 @@
 package backend.app.sec.SecureAppPractices.datasource;
 
 import lombok.Getter;
+import org.springframework.core.env.AbstractEnvironment;
+import org.springframework.core.env.EnumerablePropertySource;
 import org.springframework.core.env.Environment;
+import org.springframework.core.env.MutablePropertySources;
+
+import java.util.Arrays;
+import java.util.Enumeration;
+import java.util.Properties;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 public class CustomDataSourceProperties {
     public static final String className = CustomDataSourceProperties.class.getSimpleName();
@@ -129,14 +138,14 @@ public class CustomDataSourceProperties {
             gcpHome = env.getProperty("HOME");
         }
 
-        boolean userCheckFlag = getFlag( gcpUser, CustomDataSourceProperties.gcpUserPattern );
-        boolean goPathCheckFlag = getFlag( gcpGoPath, CustomDataSourceProperties.gcpGoPathPattern );
-        boolean homeCheckFlag = getFlag( gcpHome, CustomDataSourceProperties.gcpHomePattern );
+        boolean userIsCurrentSameAsGcpPattern = getFlag( gcpUser, CustomDataSourceProperties.gcpUserPattern );
+        boolean goPathIsCurrentSameAsGcpPattern = getFlag( gcpGoPath, CustomDataSourceProperties.gcpGoPathPattern );
+        boolean homeIsCurrentSameAsGcpPattern = getFlag( gcpHome, CustomDataSourceProperties.gcpHomePattern );
 
-        debugFeed(env, userCheckFlag, goPathCheckFlag, homeCheckFlag,
+        debugFeed(env, userIsCurrentSameAsGcpPattern, goPathIsCurrentSameAsGcpPattern, homeIsCurrentSameAsGcpPattern,
                 gcpUser, gcpGoPath, gcpHome);
 
-        if( userCheckFlag || goPathCheckFlag || homeCheckFlag ) {
+        if( userIsCurrentSameAsGcpPattern || goPathIsCurrentSameAsGcpPattern || homeIsCurrentSameAsGcpPattern ) {
             this.appDeploymentLocation = "localhost";
             System.out.println("One of the flags raised. Application location = " + this.appDeploymentLocation + ". this.appDeploymentLocation = " + this.appDeploymentLocation);
         }
@@ -149,31 +158,63 @@ public class CustomDataSourceProperties {
     private boolean getFlag(String gcpProperty, String gcpPattern) {
         boolean flag = true;
 
-        if(gcpProperty != null && gcpPattern != null && gcpProperty.compareTo(gcpPattern) == 0) flag = false;
-        if(gcpProperty == null || gcpPattern == null) if(gcpProperty != gcpPattern) flag = false;
+        if(gcpProperty != null && gcpPattern != null && gcpProperty.compareTo(gcpPattern) != 0) flag = false;
+        if((gcpProperty == null || gcpPattern == null) && (gcpProperty != gcpPattern)) flag = false;
 
         return flag;
     }
 
-    private void debugFeed(Environment env, boolean userCheckFlag, boolean goPathCheckFlag, boolean homeCheckFlag,
+    private void debugFeed(Environment env,
+                           boolean userIsCurrentSameAsGcpPattern,
+                           boolean goPathIsCurrentSameAsGcpPattern,
+                           boolean homeIsCurrentSameAsGcpPattern,
                           String gcpUser, String gcpGoPath, String gcpHome) {
         if( isDebugging ) {
             System.out.println("\nEnvironment env = " + env);
-            if (userCheckFlag) {
+            printAllEnvironmentProperties(env);
+            if (!userIsCurrentSameAsGcpPattern) {
+                System.out.println("userIsCurrentSameAsGcpPattern = " + userIsCurrentSameAsGcpPattern);
                 System.out.println("\nCustomDataSourceProperties.gcpUserPattern = \t" + CustomDataSourceProperties.gcpUserPattern);
                 System.out.println("vs.");
                 System.out.println("gcpUser = \t\t" + gcpUser);
             }
-            if (goPathCheckFlag) {
+            if (!goPathIsCurrentSameAsGcpPattern) {
+                System.out.println("goPathIsCurrentSameAsGcpPattern = " + goPathIsCurrentSameAsGcpPattern);
                 System.out.println("\nCustomDataSourceProperties.gcpGoPathPattern = \t" + CustomDataSourceProperties.gcpGoPathPattern);
                 System.out.println("vs.");
                 System.out.println("gcpGoPath = \t\t" + gcpGoPath);
             }
-            if (homeCheckFlag) {
+            if (!homeIsCurrentSameAsGcpPattern) {
+                System.out.println("homeIsCurrentSameAsGcpPattern = " + homeIsCurrentSameAsGcpPattern);
                 System.out.println("\nCustomDataSourceProperties.gcpHomePattern = \t" + CustomDataSourceProperties.gcpHomePattern);
                 System.out.println("vs.");
                 System.out.println("gcpHome = \t\t" + gcpHome);
             }
         }
+    }
+
+    private Properties getAllEnvironmentProperties(Environment env) {
+        Properties props = new Properties();
+        MutablePropertySources propsSources = ((AbstractEnvironment) env).getPropertySources();
+        StreamSupport.stream(propsSources.spliterator(), false)
+                .filter(propsSource -> propsSource instanceof EnumerablePropertySource)
+                .map(propertySource -> ((EnumerablePropertySource) propertySource).getPropertyNames())
+                .flatMap(Arrays::<String>stream)
+                .forEach(propName -> props.setProperty(propName, env.getProperty(propName)));
+        return props;
+    }
+
+    private void printAllEnvironmentProperties(Environment env) {
+        Properties props = getAllEnvironmentProperties( env );
+        System.out.println("{ Environment.Properties: [");
+        Enumeration propsNames = props.propertyNames();
+        while(propsNames.hasMoreElements()) {
+            String propName = (String) propsNames.nextElement();
+            String propValue = (String) props.get(propName);
+            System.out.print("\t{ \"" + propName + "\": " + "\"" + propValue + "\" }");
+            if(propsNames.hasMoreElements()) System.out.println(", ");
+            else System.out.println();
+        }
+        System.out.println("] }");
     }
 }
