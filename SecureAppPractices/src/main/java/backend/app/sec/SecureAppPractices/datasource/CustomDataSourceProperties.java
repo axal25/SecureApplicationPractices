@@ -144,15 +144,6 @@ public class CustomDataSourceProperties {
 
         debugFeed(env, userIsCurrentSameAsGcpPattern, goPathIsCurrentSameAsGcpPattern, homeIsCurrentSameAsGcpPattern,
                 gcpUser, gcpGoPath, gcpHome);
-
-        if( userIsCurrentSameAsGcpPattern || goPathIsCurrentSameAsGcpPattern || homeIsCurrentSameAsGcpPattern ) {
-            this.appDeploymentLocation = "localhost";
-            System.out.println("One of the flags raised. Application location = " + this.appDeploymentLocation + ". this.appDeploymentLocation = " + this.appDeploymentLocation);
-        }
-        else {
-            this.appDeploymentLocation = "gcp";
-            System.out.println("One of the flags raised. Application location = " + this.appDeploymentLocation + ". this.appDeploymentLocation = " + this.appDeploymentLocation);
-        }
     }
 
     private boolean getFlag(String gcpProperty, String gcpPattern) {
@@ -189,6 +180,14 @@ public class CustomDataSourceProperties {
                 System.out.println("\nCustomDataSourceProperties.gcpHomePattern = \t" + CustomDataSourceProperties.gcpHomePattern);
                 System.out.println("vs.");
                 System.out.println("gcpHome = \t\t" + gcpHome);
+            }
+            if( userIsCurrentSameAsGcpPattern && goPathIsCurrentSameAsGcpPattern && homeIsCurrentSameAsGcpPattern ) {
+                this.appDeploymentLocation = "gcp";
+                System.out.println("One of the flags raised. Application location = " + this.appDeploymentLocation + ". this.appDeploymentLocation = " + this.appDeploymentLocation);
+            }
+            else {
+                this.appDeploymentLocation = "localhost";
+                System.out.println("One of the flags raised. Application location = " + this.appDeploymentLocation + ". this.appDeploymentLocation = " + this.appDeploymentLocation);
             }
         }
     }
