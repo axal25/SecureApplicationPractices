@@ -1,12 +1,9 @@
-runtime: java
+runtime: java11
 env: standard
 
 handlers:
   - url: /.*
     script: this field is required, but ignored
-
-runtime_config:
-  runtime: java11
 
 # This sample incurs costs to run on the App Engine flexible environment.
 # The settings below are to reduce costs during testing and are not appropriate
