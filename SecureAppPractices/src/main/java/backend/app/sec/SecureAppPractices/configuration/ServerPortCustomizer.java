@@ -33,19 +33,20 @@ public class ServerPortCustomizer implements WebServerFactoryCustomizer<Configur
             applicationListeningPort = getApplicationListeningPortFromEnvironment();
         }
         catch(Exception e) {
+            System.err.println("[ERROR] Exception inside getApplicationListeningPortFromEnvironment() caught: applicationListeningPort = ServerPortCustomizer.defaultPort == " + ServerPortCustomizer.defaultPort);
             applicationListeningPort = ServerPortCustomizer.defaultPort;
         }
         return applicationListeningPort;
     }
 
     public int getApplicationListeningPortFromEnvironment() {
-        if( env == null ) System.err.println("env = " + this.env);
+        if( env == null ) System.err.println("env == " + this.env);
         String applicationListeningPort = null;
         if( env != null ) applicationListeningPort = this.env.getProperty("PORT");
-        else System.err.println("applicationListeningPort = " + applicationListeningPort);
+        else System.err.println("env == " + env + " >> applicationListeningPort = " + applicationListeningPort);
         if( applicationListeningPort == null ) {
-            applicationListeningPort = String.valueOf(defaultPort);
-            System.err.println("applicationListeningPort = " + applicationListeningPort);
+            applicationListeningPort = String.valueOf(ServerPortCustomizer.defaultPort);
+            System.err.println("applicationListeningPort == null >> applicationListeningPort = String.valueOf(ServerPortCustomizer.defaultPort) == " + ServerPortCustomizer.defaultPort);
         }
         int intApplicationListeningPort = Integer.parseInt( applicationListeningPort );
         return intApplicationListeningPort;

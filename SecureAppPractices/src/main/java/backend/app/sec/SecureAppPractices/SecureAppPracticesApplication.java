@@ -12,7 +12,6 @@ import java.util.Collections;
 public class SecureAppPracticesApplication {
 
 	public static void main(String[] args) {
-		// SpringApplication.run(SecureAppPracticesApplication.class, args); // Default
 		initApplication(args);
 	}
 
