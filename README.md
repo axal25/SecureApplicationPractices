@@ -7,7 +7,8 @@ Project for Project study course in University. Online study platform teaching g
 
 ---
 ### Functionality
-Swagger api is available at [API](http://localhost:8080/swagger-ui.html#/course-controller)
+Swagger api is available at [API](http://localhost:8080/swagger-ui.html#/course-controller) \
+[Fully deployed back-end application on Google cloud platform](https://braided-tracker-259922.appspot.com/secureApi/courses)
 
 ---
 ### Useful links
