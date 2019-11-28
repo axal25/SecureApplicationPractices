@@ -30,6 +30,7 @@ Swagger api is available at [API](http://localhost:8080/swagger-ui.html#/course-
 [Google cloud platform - Connecting Engine App to Cloud SQL - IAM Permissions](https://cloud.google.com/compute/docs/access/iam-permissions) \
 [Google cloud platform - Connecting Engine App to Cloud SQL - Cloud SQL Roles](https://cloud.google.com/iam/docs/understanding-roles#cloud-sql-roles)
 [Google cloud platform - Connecting Engine App to Cloud SQL - Deployment descriptor .yaml / .xml](https://cloud.google.com/appengine/docs/flexible/java/configuring-your-app-with-app-yaml)
+[Google cloud platform - Connecting Engine App to Cloud SQL - Spring boot quickstart](https://cloud.google.com/appengine/docs/flexible/java/quickstart)
 ---
 ### To do
     1. [DONE] Safe endpoints: GET (by id & all), POST, PUT, DELETE

@@ -6,7 +6,7 @@ handlers:
     script: this field is required, but ignored
 
 runtime_config:
-  java_version: 11
+  runtime: java11
 
 # This sample incurs costs to run on the App Engine flexible environment.
 # The settings below are to reduce costs during testing and are not appropriate
