@@ -29,6 +29,7 @@ Swagger api is available at [API](http://localhost:8080/swagger-ui.html#/course-
 [Google cloud platform - Connecting Engine App to Cloud SQL - Datasource](https://cloud.google.com/sql/docs/mysql/connect-app-engine) \
 [Google cloud platform - Connecting Engine App to Cloud SQL - IAM Permissions](https://cloud.google.com/compute/docs/access/iam-permissions) \
 [Google cloud platform - Connecting Engine App to Cloud SQL - Cloud SQL Roles](https://cloud.google.com/iam/docs/understanding-roles#cloud-sql-roles)
+[Google cloud platform - Connecting Engine App to Cloud SQL - Deployment descriptor .yaml / .xml](https://cloud.google.com/appengine/docs/flexible/java/configuring-your-app-with-app-yaml)
 ---
 ### To do
     1. [DONE] Safe endpoints: GET (by id & all), POST, PUT, DELETE
@@ -253,7 +254,7 @@ Type your password
 `cd SecureApplicationPractices/SecureAppPractices`
 9. Compile with maven so it contains .jar
     1. First change jdk from 8 (default) to 11 \
-    `sudo update-java-alternatives -s java-1.11.0-openjdk-amd64 && export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64`\
+    `sudo update-java-alternatives -s java-1.11.0-openjdk-amd64 && export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64` 
         1. Ignore error:  
         `update-alternatives: error: no alternatives for mozilla-javaplugin.so`
         1. To go back: \
