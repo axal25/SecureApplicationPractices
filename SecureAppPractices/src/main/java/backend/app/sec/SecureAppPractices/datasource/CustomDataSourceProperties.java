@@ -9,7 +9,6 @@ import org.springframework.core.env.MutablePropertySources;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Properties;
-import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 public class CustomDataSourceProperties {
@@ -34,10 +33,27 @@ public class CustomDataSourceProperties {
     private static final String gcpToGcpInstanceConnectionName = "braided-tracker-259922:europe-west1:gcp-remote-postgres";
     private static final String gcpToGcpUseSSL = "false";
 
+    /*
     private static final String gcpShellUsername = null; // "emevig";
     private static final String gcpUserPattern = CustomDataSourceProperties.gcpShellUsername;
     private static final String gcpGoPathPattern = null; // "/home/" + gcpShellUsername + "/gopath:/google/gopath";
     private static final String gcpHomePattern = "/root";// "/home/" + gcpShellUsername;
+     */
+
+    private static final String gcpPattern_GAE_ENV = "standard";
+    private static final String gcpPattern_GAE_SERIVCE = "default";
+    private static final String gcpPattern_GAE_RUNTIME = "java11";
+    /**
+     { "GAE_ENV": "standard" },                                                                 // 3/3
+     { "GAE_SERVICE": "default" },                                                              // 3/3
+     { "GAE_RUNTIME": "java11" },                                                               // 3/3
+     { "GAE_APPLICATION": "e~braided-tracker-259922" },                                         // 2/3
+     { "GOOGLE_CLOUD_PROJECT": "braided-tracker-259922" },                                      // 2/3
+     { "GAE_VERSION": "springboot-helloworld" }, // dependant on to pom.xml -> not constant     // ?/?
+     { "GAE_DEPLOYMENT_ID": "422777054906127631" }, // NOT CONSTANT                             // ?/?
+     { "PORT": "8081" }, // NOT CONSTANT                                                        // ?/?
+     **/
+
 
 //    private static final String target = "localhost";
     private static final String databaseLocation = "gcp";
@@ -128,22 +144,22 @@ public class CustomDataSourceProperties {
     }
 
     private void setAppDeploymentLocation(Environment env) {
-        String gcpUser = null;
-        String gcpGoPath = null;
-        String gcpHome = null;
+        String gcpCurrent_GAE_ENV = null;
+        String gcpCurrent_GAE_RUNTIME = null;
+        String gcpCurrent_GAE_SERIVCE = null;
 
         if( env != null ) {
-            gcpUser = env.getProperty("USER");
-            gcpGoPath = env.getProperty("GOPATH");
-            gcpHome = env.getProperty("HOME");
+            gcpCurrent_GAE_ENV = env.getProperty("GAE_ENV");
+            gcpCurrent_GAE_RUNTIME = env.getProperty("GAE_RUNTIME");
+            gcpCurrent_GAE_SERIVCE = env.getProperty("GAE_SERVICE");
         }
 
-        boolean userIsCurrentSameAsGcpPattern = getFlag( gcpUser, CustomDataSourceProperties.gcpUserPattern );
-        boolean goPathIsCurrentSameAsGcpPattern = getFlag( gcpGoPath, CustomDataSourceProperties.gcpGoPathPattern );
-        boolean homeIsCurrentSameAsGcpPattern = getFlag( gcpHome, CustomDataSourceProperties.gcpHomePattern );
+        boolean GAE_ENV_IsCurrentSameAsGcpPattern = getFlag( gcpCurrent_GAE_ENV, CustomDataSourceProperties.gcpPattern_GAE_ENV );
+        boolean GAE_RUNTIME_IsCurrentSameAsGcpPattern = getFlag( gcpCurrent_GAE_RUNTIME, CustomDataSourceProperties.gcpPattern_GAE_RUNTIME );
+        boolean GAE_SERVICE_IsCurrentSameAsGcpPattern = getFlag( gcpCurrent_GAE_SERIVCE, CustomDataSourceProperties.gcpPattern_GAE_SERIVCE );
 
-        debugFeed(env, userIsCurrentSameAsGcpPattern, goPathIsCurrentSameAsGcpPattern, homeIsCurrentSameAsGcpPattern,
-                gcpUser, gcpGoPath, gcpHome);
+        debugFeed(env, GAE_ENV_IsCurrentSameAsGcpPattern, GAE_RUNTIME_IsCurrentSameAsGcpPattern, GAE_SERVICE_IsCurrentSameAsGcpPattern,
+                gcpCurrent_GAE_ENV, gcpCurrent_GAE_RUNTIME, gcpCurrent_GAE_SERIVCE);
     }
 
     private boolean getFlag(String gcpProperty, String gcpPattern) {
@@ -156,38 +172,38 @@ public class CustomDataSourceProperties {
     }
 
     private void debugFeed(Environment env,
-                           boolean userIsCurrentSameAsGcpPattern,
-                           boolean goPathIsCurrentSameAsGcpPattern,
-                           boolean homeIsCurrentSameAsGcpPattern,
-                          String gcpUser, String gcpGoPath, String gcpHome) {
+                           boolean GAE_ENV_IsCurrentSameAsGcpPattern,
+                           boolean GAE_RUNTIME_IsCurrentSameAsGcpPattern,
+                           boolean GAE_SERVICE_IsCurrentSameAsGcpPattern,
+                          String gcpCurrent_GAE_ENV, String gcpCurrent_GAE_RUNTIME, String gcpCurrent_GAE_SERIVCE) {
         if( isDebugging ) {
             System.out.println("\nEnvironment env = " + env);
             printAllEnvironmentProperties(env);
-            if (!userIsCurrentSameAsGcpPattern) {
-                System.out.println("userIsCurrentSameAsGcpPattern = " + userIsCurrentSameAsGcpPattern);
-                System.out.println("\nCustomDataSourceProperties.gcpUserPattern = \t" + CustomDataSourceProperties.gcpUserPattern);
+            if (!GAE_ENV_IsCurrentSameAsGcpPattern) {
+                System.out.println("\nGAE_ENV_IsCurrentSameAsGcpPattern = " + GAE_ENV_IsCurrentSameAsGcpPattern);
+                System.out.println("CustomDataSourceProperties.gcpUserPattern = \t" + CustomDataSourceProperties.gcpPattern_GAE_ENV);
                 System.out.println("vs.");
-                System.out.println("gcpUser = \t\t" + gcpUser);
+                System.out.println("gcpCurrent_GAE_ENV = \t\t\t\t\t\t\t" + gcpCurrent_GAE_ENV);
             }
-            if (!goPathIsCurrentSameAsGcpPattern) {
-                System.out.println("goPathIsCurrentSameAsGcpPattern = " + goPathIsCurrentSameAsGcpPattern);
-                System.out.println("\nCustomDataSourceProperties.gcpGoPathPattern = \t" + CustomDataSourceProperties.gcpGoPathPattern);
+            if (!GAE_RUNTIME_IsCurrentSameAsGcpPattern) {
+                System.out.println("\nGAE_RUNTIME_IsCurrentSameAsGcpPattern = " + GAE_RUNTIME_IsCurrentSameAsGcpPattern);
+                System.out.println("CustomDataSourceProperties.gcpGoPathPattern = \t" + CustomDataSourceProperties.gcpPattern_GAE_RUNTIME);
                 System.out.println("vs.");
-                System.out.println("gcpGoPath = \t\t" + gcpGoPath);
+                System.out.println("gcpCurrent_GAE_RUNTIME = \t\t\t\t\t\t" + gcpCurrent_GAE_RUNTIME);
             }
-            if (!homeIsCurrentSameAsGcpPattern) {
-                System.out.println("homeIsCurrentSameAsGcpPattern = " + homeIsCurrentSameAsGcpPattern);
-                System.out.println("\nCustomDataSourceProperties.gcpHomePattern = \t" + CustomDataSourceProperties.gcpHomePattern);
+            if (!GAE_SERVICE_IsCurrentSameAsGcpPattern) {
+                System.out.println("\nGAE_SERVICE_IsCurrentSameAsGcpPattern = " + GAE_SERVICE_IsCurrentSameAsGcpPattern);
+                System.out.println("CustomDataSourceProperties.gcpHomePattern = \t" + CustomDataSourceProperties.gcpPattern_GAE_SERIVCE);
                 System.out.println("vs.");
-                System.out.println("gcpHome = \t\t" + gcpHome);
+                System.out.println("gcpCurrent_GAE_SERIVCE = \t\t\t\t\t\t" + gcpCurrent_GAE_SERIVCE);
             }
-            if( userIsCurrentSameAsGcpPattern && goPathIsCurrentSameAsGcpPattern && homeIsCurrentSameAsGcpPattern ) {
+            if( GAE_ENV_IsCurrentSameAsGcpPattern && GAE_RUNTIME_IsCurrentSameAsGcpPattern && GAE_SERVICE_IsCurrentSameAsGcpPattern ) {
                 this.appDeploymentLocation = "gcp";
-                System.out.println("One of the flags raised. Application location = " + this.appDeploymentLocation + ". this.appDeploymentLocation = " + this.appDeploymentLocation);
+                System.out.println("\nAll flags are TRUE. Application location = " + this.appDeploymentLocation + ". this.appDeploymentLocation = " + this.appDeploymentLocation);
             }
             else {
                 this.appDeploymentLocation = "localhost";
-                System.out.println("One of the flags raised. Application location = " + this.appDeploymentLocation + ". this.appDeploymentLocation = " + this.appDeploymentLocation);
+                System.out.println("\nAt least one of the flags is FALSE. Application location = " + this.appDeploymentLocation + ". this.appDeploymentLocation = " + this.appDeploymentLocation);
             }
         }
     }
