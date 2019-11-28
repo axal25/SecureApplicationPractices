@@ -148,7 +148,7 @@
 				<version>2.2.0</version>
 				<configuration>
 					<deploy.projectId>GCLOUD_CONFIG</deploy.projectId>
-					<version>SecureAppPractices-version from pom.xml</version>
+					<version>SecureAppPractices-version-from-pom-xml</version>
 				</configuration>
 			</plugin>
 		</plugins>
