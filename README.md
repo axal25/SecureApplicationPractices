@@ -9,7 +9,13 @@ Project for Project study course in University. Online study platform teaching g
 ### Functionality
 Swagger api is available at [API](http://localhost:8080/swagger-ui.html#/course-controller) \
 [Fully deployed back-end application on Google cloud platform](https://braided-tracker-259922.appspot.com/swagger-ui.html)
-
+---
+### To do
+    1. [DONE] 3 Different datasources - postgres, limited safe, limited un-safe
+    2. [DONE] Safe endpoints: GET (by id & all), POST, PUT, DELETE
+    3. [DONE] Endpoinds exposed to SQLi (SQL Injection)
+        1. Adding and modifying
+    4. Creating on request new database - for 1 user to play around 
 ---
 ### Useful links
 [Lombok package & plugin config](https://www.baeldung.com/lombok-ide) \
@@ -36,11 +42,6 @@ Swagger api is available at [API](http://localhost:8080/swagger-ui.html#/course-
 [Java - Environment properties](https://stackoverflow.com/questions/23506471/spring-access-all-environment-properties-as-a-map-or-properties-object) \
 [Programmatically change Spring boot Application listening port](https://www.baeldung.com/spring-boot-change-port)
 ---
-### To do
-    1. [DONE] Safe endpoints: GET (by id & all), POST, PUT, DELETE
-    2. [DONE] Endpoinds exposed to SQLi (SQL Injection)
-        1. Adding and modifying
-    3. Creating on request new database - for 1 user to play around
 
 ### To run JAR file
 1. right-click `target` folder or open in terminal `cd ~/IdeaProjects/SecureAppPractices/target$ `

@@ -2,6 +2,7 @@ package backend.app.sec.SecureAppPractices.dao;
 
 import backend.app.sec.SecureAppPractices.model.Course;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -16,7 +17,7 @@ public class UnSecurePostgreSqlCourseDao implements CourseDao {
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public UnSecurePostgreSqlCourseDao(JdbcTemplate jdbcTemplate) {
+    public UnSecurePostgreSqlCourseDao(@Qualifier("postgresUserJdbcTemplate") JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
