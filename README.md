@@ -11,7 +11,7 @@ Swagger api is available at [API](http://localhost:8080/swagger-ui.html#/course-
 [Fully deployed back-end application on Google cloud platform](https://braided-tracker-259922.appspot.com/swagger-ui.html)
 ---
 ### To do
-    1. [DONE] 3 Different datasources - postgres, limited safe, limited un-safe
+    1. [DONE] 3 Different datasources - used only for migrations; limited safe - for safe api; limited unsafe - for unsafe api;
     2. [DONE] Safe endpoints: GET (by id & all), POST, PUT, DELETE
     3. [DONE] Endpoinds exposed to SQLi (SQL Injection)
         1. Adding and modifying
