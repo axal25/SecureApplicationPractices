@@ -15,7 +15,8 @@ Swagger api is available at [API](http://localhost:8080/swagger-ui.html#/course-
     2. [DONE] Safe endpoints: GET (by id & all), POST, PUT, DELETE
     3. [DONE] Endpoinds exposed to SQLi (SQL Injection)
         1. Adding and modifying
-    4. Creating on request new database - for 1 user to play around 
+    4. [INPROGRESS] Unified classes connected to Secure & Unsecure Api, includin test classes
+    5. Creating on request new database - for 1 user to play around 
 ---
 ### Useful links
 [Lombok package & plugin config](https://www.baeldung.com/lombok-ide) \
