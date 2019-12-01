@@ -1,5 +1,7 @@
 package backend.app.sec.SecureAppPractices.configuration.datasource;
 
+import backend.app.sec.SecureAppPractices.configuration.datasource.properties.CustomDataSourcePatterns;
+import backend.app.sec.SecureAppPractices.configuration.datasource.properties.CustomDataSourceProperties;
 import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -9,13 +11,12 @@ import org.springframework.core.env.Environment;
 
 @Configuration
 public class PostgreSqlDataSources {
-
+    public static final String className = PostgreSqlDataSources.class.getSimpleName();
     public static final boolean isDebugging = false;
     private final Environment env;
     private final CustomDataSourceProperties postgresUserCustomDataSourceProperties;
     private final CustomDataSourceProperties limitedSafeUserCustomDataSourceProperties;
     private final CustomDataSourceProperties limitedUnSafeUserCustomDataSourceProperties;
-    private static final int maximumPoolSize = 5;
 
     @Autowired
     PostgreSqlDataSources(Environment env ) {
@@ -40,67 +41,72 @@ public class PostgreSqlDataSources {
     }
 
     @Bean("postgresUserHikariDataSource")
-    public HikariDataSource postgresUserHikariDataSource() {
-        HikariDataSource hikariDataSource = new HikariDataSource();
-
-        hikariDataSource.setJdbcUrl( postgresUserCustomDataSourceProperties.getJdbcUrl() );
-        hikariDataSource.setUsername( postgresUserCustomDataSourceProperties.getUsername() );
-        hikariDataSource.setPassword( postgresUserCustomDataSourceProperties.getPassword() );
-        hikariDataSource.setDriverClassName( postgresUserCustomDataSourceProperties.getDriverClassName() );
-        if( postgresUserCustomDataSourceProperties.getSocketFactory() != null &&
-                postgresUserCustomDataSourceProperties.getCloudSqlInstance() != null &&
-                postgresUserCustomDataSourceProperties.getUseSSL() != null ) {
-            hikariDataSource.addDataSourceProperty("socketFactory", postgresUserCustomDataSourceProperties.getSocketFactory());
-            hikariDataSource.addDataSourceProperty("cloudSqlInstance", postgresUserCustomDataSourceProperties.getCloudSqlInstance());
-            hikariDataSource.addDataSourceProperty("useSSL", postgresUserCustomDataSourceProperties.getUseSSL());
-        }
-        hikariDataSource.setSchema( "safe" ); // POTRZEBNE?
-        hikariDataSource.setMaximumPoolSize(PostgreSqlDataSources.maximumPoolSize);
-        System.out.println("PostgresSqlDataSource >> HikariDataSource postgresUserHikariDataSource()");
-        return hikariDataSource;
+    public HikariDataSource postgresUserHikariDataSource() throws Exception {
+        return hikariDataSource(this.postgresUserCustomDataSourceProperties, 1, "postgresUserCustomDataSourceProperties()");
     }
 
     @Bean("limitedSafeUserHikariDataSource")
     @DependsOn("flyway")
-    public HikariDataSource limitedSafeUserHikariDataSource() {
-        HikariDataSource hikariDataSource = new HikariDataSource();
-
-        hikariDataSource.setJdbcUrl( limitedSafeUserCustomDataSourceProperties.getJdbcUrl() );
-        hikariDataSource.setUsername( limitedSafeUserCustomDataSourceProperties.getUsername() );
-        hikariDataSource.setPassword( limitedSafeUserCustomDataSourceProperties.getPassword() );
-        hikariDataSource.setDriverClassName( limitedSafeUserCustomDataSourceProperties.getDriverClassName() );
-        if( limitedSafeUserCustomDataSourceProperties.getSocketFactory() != null &&
-                limitedSafeUserCustomDataSourceProperties.getCloudSqlInstance() != null &&
-                limitedSafeUserCustomDataSourceProperties.getUseSSL() != null ) {
-            hikariDataSource.addDataSourceProperty("socketFactory", limitedSafeUserCustomDataSourceProperties.getSocketFactory());
-            hikariDataSource.addDataSourceProperty("cloudSqlInstance", limitedSafeUserCustomDataSourceProperties.getCloudSqlInstance());
-            hikariDataSource.addDataSourceProperty("useSSL", limitedSafeUserCustomDataSourceProperties.getUseSSL());
-        }
-        hikariDataSource.setSchema( "safe" ); // POTRZEBNE?
-        hikariDataSource.setMaximumPoolSize(PostgreSqlDataSources.maximumPoolSize);
-        System.out.println("PostgresSqlDataSource >> HikariDataSource limitedSafeUserHikariDataSource()");
-        return hikariDataSource;
+    public HikariDataSource limitedSafeUserHikariDataSource() throws Exception {
+        return hikariDataSource(this.limitedSafeUserCustomDataSourceProperties, 25, "limitedSafeUserCustomDataSourceProperties()");
     }
 
     @Bean("limitedUnSafeUserHikariDataSource")
     @DependsOn("flyway")
-    public HikariDataSource limitedUnSafeUserHikariDataSource() {
-        HikariDataSource hikariDataSource = new HikariDataSource();
+    public HikariDataSource limitedUnSafeUserHikariDataSource() throws Exception {
+        return hikariDataSource(this.limitedUnSafeUserCustomDataSourceProperties, 25, "limitedUnSafeUserHikariDataSource()");
+    }
 
-        hikariDataSource.setJdbcUrl( limitedUnSafeUserCustomDataSourceProperties.getJdbcUrl() );
-        hikariDataSource.setUsername( limitedUnSafeUserCustomDataSourceProperties.getUsername() );
-        hikariDataSource.setPassword( limitedUnSafeUserCustomDataSourceProperties.getPassword() );
-        hikariDataSource.setDriverClassName( limitedUnSafeUserCustomDataSourceProperties.getDriverClassName() );
-        if( limitedUnSafeUserCustomDataSourceProperties.getSocketFactory() != null &&
-                limitedUnSafeUserCustomDataSourceProperties.getCloudSqlInstance() != null &&
-                limitedUnSafeUserCustomDataSourceProperties.getUseSSL() != null ) {
-            hikariDataSource.addDataSourceProperty("socketFactory", limitedUnSafeUserCustomDataSourceProperties.getSocketFactory());
-            hikariDataSource.addDataSourceProperty("cloudSqlInstance", limitedUnSafeUserCustomDataSourceProperties.getCloudSqlInstance());
-            hikariDataSource.addDataSourceProperty("useSSL", limitedUnSafeUserCustomDataSourceProperties.getUseSSL());
+    private HikariDataSource hikariDataSource(
+            CustomDataSourceProperties customDataSourceProperties,
+            int maximumPoolSize,
+            String callingFunctionName
+    ) throws Exception {
+        final String functionName = "hikariDataSource(CustomDataSourceProperties customDataSourceProperties, int maximumPoolSize, String callingFunctionName)";
+        HikariDataSource hikariDataSource = getHikariDataSourceWithSetBasicProperties(customDataSourceProperties, maximumPoolSize);
+        hikariDataSource = setAdditionalPropertiesIfNotNull(
+                hikariDataSource,
+                customDataSourceProperties,
+                new StringBuilder()
+                .append(callingFunctionName)
+                .append(" >> ")
+                .append(functionName)
+                .toString()
+        );
+        System.out.println("PostgresSqlDataSource >> HikariDataSource " + callingFunctionName);
+        return hikariDataSource;
+    }
+
+    private HikariDataSource getHikariDataSourceWithSetBasicProperties(CustomDataSourceProperties customDataSourceProperties, int maximumPoolSize) {
+        HikariDataSource hikariDataSource = new HikariDataSource();
+        hikariDataSource.setJdbcUrl( customDataSourceProperties.getJdbcUrl() );
+        hikariDataSource.setUsername( customDataSourceProperties.getUsername() );
+        hikariDataSource.setPassword( customDataSourceProperties.getPassword() );
+        hikariDataSource.setDriverClassName( customDataSourceProperties.getDriverClassName() );
+        hikariDataSource.setMaximumPoolSize(maximumPoolSize);
+        return hikariDataSource;
+    }
+
+    private HikariDataSource setAdditionalPropertiesIfNotNull(
+            HikariDataSource hikariDataSource,
+            CustomDataSourceProperties customDataSourceProperties,
+            String callingFunctionName
+    ) throws Exception {
+        final String functionName = "setAdditionalPropertiesIfNotNull(HikariDataSource hikariDataSource, CustomDataSourceProperties customDataSourceProperties, String callingFunctionName)";
+        if( hikariDataSource == null ) throw new Exception( new StringBuilder()
+                .append(className).append(" >> ")
+                .append(callingFunctionName).append(" >> ")
+                .append(functionName).append(" >> ")
+                .append("hikariDataSource == ").append(hikariDataSource.toString()).toString()
+        );
+        if( customDataSourceProperties.getSocketFactory() != null &&
+                customDataSourceProperties.getCloudSqlInstance() != null &&
+                customDataSourceProperties.getUseSSL() != null
+        ) {
+            hikariDataSource.addDataSourceProperty("socketFactory", customDataSourceProperties.getSocketFactory());
+            hikariDataSource.addDataSourceProperty("cloudSqlInstance", customDataSourceProperties.getCloudSqlInstance());
+            hikariDataSource.addDataSourceProperty("useSSL", customDataSourceProperties.getUseSSL());
         }
-        hikariDataSource.setSchema( "unsafe" ); // POTRZEBNE?
-        hikariDataSource.setMaximumPoolSize(PostgreSqlDataSources.maximumPoolSize);
-        System.out.println("PostgresSqlDataSource >> HikariDataSource limitedUnSafeUserHikariDataSource()");
         return hikariDataSource;
     }
 }

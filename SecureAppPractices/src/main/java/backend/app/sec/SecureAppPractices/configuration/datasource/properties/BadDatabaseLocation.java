@@ -1,4 +1,4 @@
-package backend.app.sec.SecureAppPractices.configuration.datasource;
+package backend.app.sec.SecureAppPractices.configuration.datasource.properties;
 
 public class BadDatabaseLocation extends Exception {
     static final String throwableMsg = "You need to set CustomDataSourceProperties this.databaseLocation to \"localhost\" or \"gcp\". this.databaseLocation: ";

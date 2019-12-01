@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class ServerPortCustomizer implements WebServerFactoryCustomizer<ConfigurableWebServerFactory> {
 
-    private static final int defaultPort = 8080;
+    public static final int defaultPort = 8080;
     @Getter
     private final Environment env;
     @Getter

@@ -21,7 +21,9 @@ $do$
                 FROM pg_catalog.pg_namespace
                 WHERE nspname = 'safe'
                 ) THEN
+                REVOKE ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA safe FROM limitedsafe;
                 REVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA safe FROM limitedsafe;
+                REVOKE USAGE ON SCHEMA safe FROM limitedsafe;
                 DROP SCHEMA IF EXISTS safe CASCADE;
             END IF;
         END IF;
@@ -58,7 +60,9 @@ $do$
                     FROM pg_catalog.pg_namespace
                     WHERE nspname = 'unsafe'
                 ) THEN
+                REVOKE ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA unsafe FROM limitedunsafe;
                 REVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA unsafe FROM limitedunsafe;
+                REVOKE USAGE ON SCHEMA unsafe FROM limitedunsafe;
                 DROP SCHEMA IF EXISTS unsafe CASCADE;
             END IF;
         END IF;
@@ -116,11 +120,6 @@ INSERT INTO unsafe.courses (id, name) VALUES ( CAST(uuid_generate_v4() AS VARCHA
 INSERT INTO unsafe.courses (id, name) VALUES ( CAST(uuid_generate_v4() AS VARCHAR ), 'Predefined Example Course from /resources/db/migration/*.sql file #2.6');
 INSERT INTO unsafe.courses (id, name) VALUES ( CAST(uuid_generate_v4() AS VARCHAR ), 'Predefined Example Course from /resources/db/migration/*.sql file #2.7');
 INSERT INTO unsafe.courses (id, name) VALUES ( CAST(uuid_generate_v4() AS VARCHAR ), 'Predefined Example Course from /resources/db/migration/*.sql file #2.8');
-INSERT INTO unsafe.courses (id, name) VALUES ( CAST(uuid_generate_v4() AS VARCHAR ), 'Predefined Example Course from /resources/db/migration/*.sql file #2.9');
-INSERT INTO unsafe.courses (id, name) VALUES ( CAST(uuid_generate_v4() AS VARCHAR ), 'Predefined Example Course from /resources/db/migration/*.sql file #2.10');
-INSERT INTO unsafe.courses (id, name) VALUES ( CAST(uuid_generate_v4() AS VARCHAR ), 'Predefined Example Course from /resources/db/migration/*.sql file #2.11');
-INSERT INTO unsafe.courses (id, name) VALUES ( CAST(uuid_generate_v4() AS VARCHAR ), 'Predefined Example Course from /resources/db/migration/*.sql file #2.12');
-INSERT INTO unsafe.courses (id, name) VALUES ( CAST(uuid_generate_v4() AS VARCHAR ), 'Predefined Example Course from /resources/db/migration/*.sql file #2.13');
 
 ------------------------------------------------------------------------------------------------------------------------
 --- LIMITED USER FOR SAFE ---
@@ -202,8 +201,9 @@ $do$
                 FROM   pg_catalog.pg_roles
                 WHERE  rolname = 'limitedunsafe'
             ) THEN
-            GRANT USAGE ON SCHEMA safe TO limitedunsafe;
-            GRANT SELECT, UPDATE, INSERT, DELETE ON unsafe.courses TO limitedunsafe;
+            GRANT USAGE ON SCHEMA unsafe TO limitedunsafe;
+            GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA unsafe TO limitedunsafe;
+            GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA unsafe TO limitedunsafe;
         end if;
     END;
 $do$;

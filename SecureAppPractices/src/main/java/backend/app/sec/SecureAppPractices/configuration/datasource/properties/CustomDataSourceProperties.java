@@ -1,4 +1,4 @@
-package backend.app.sec.SecureAppPractices.configuration.datasource;
+package backend.app.sec.SecureAppPractices.configuration.datasource.properties;
 
 import backend.app.sec.SecureAppPractices.configuration.datasource.database.GcpToGcpInfo;
 import backend.app.sec.SecureAppPractices.configuration.datasource.database.GcpToGcpPatterns;

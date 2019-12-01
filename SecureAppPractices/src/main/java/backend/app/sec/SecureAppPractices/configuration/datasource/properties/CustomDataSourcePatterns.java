@@ -1,4 +1,4 @@
-package backend.app.sec.SecureAppPractices.configuration.datasource;
+package backend.app.sec.SecureAppPractices.configuration.datasource.properties;
 
 public class CustomDataSourcePatterns {
     public static class AppDeploymentLocation {

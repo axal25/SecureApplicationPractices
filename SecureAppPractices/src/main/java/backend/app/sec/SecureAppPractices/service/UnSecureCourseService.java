@@ -5,13 +5,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-@Service("secureCourseService")
-public class SecureCourseService extends CourseService {
+@Service("unSecureCourseService")
+public class UnSecureCourseService extends CourseService {
 
     private final CourseDao courseDao;
 
     @Autowired
-    public SecureCourseService(@Qualifier("securePostgreSqlCourseDao") CourseDao courseDao) throws Exception {
+    public UnSecureCourseService(@Qualifier("unSecurePostgreSqlCourseDao") CourseDao courseDao) throws Exception {
         super(courseDao);
         this.courseDao = courseDao;
     }
