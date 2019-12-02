@@ -6,27 +6,19 @@ import backend.app.sec.SecureAppPractices.service.CourseService;
 import backend.app.sec.SecureAppPractices.service.CourseServiceTest;
 import com.google.gson.Gson;
 import lombok.Getter;
-import org.junit.jupiter.api.*;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.TestPropertySource;
 
 import java.net.MalformedURLException;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.List;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-@TestPropertySource(properties = "server.port="+ ServerPortCustomizer.defaultPort)
 public abstract class CourseControllerTest {
 
     @Getter
@@ -45,7 +37,6 @@ public abstract class CourseControllerTest {
     private final CourseService courseService;
     private final CourseController courseController;
 
-    @LocalServerPort
     private int autoInjectedPort;
     private String stringApiAddress;
     private URL url;
@@ -73,13 +64,10 @@ public abstract class CourseControllerTest {
             System.out.println("{\"location\": \"" + callingFunction + "\"} port != " + expectedPort + ", port == " + autoInjectedPort);
             this.autoInjectedPort = CourseControllerTest.expectedPort;
         }
-        this.stringApiAddress = "http://localhost:" + this.autoInjectedPort + "/secureApi/courses";
+        this.stringApiAddress = "http://localhost:" + this.autoInjectedPort + this.apiPrefix;
         this.url = new URL(this.stringApiAddress);
     }
 
-    @Test
-    @Order(11)
-    @DisplayName("insertCourse() endpoint: .../apiPrefix")
     public void insertCourse() {
         Course newCourse = new Course(UUID.randomUUID(), courseName+1);
         ResponseEntity<Object> responseEntityInteger = restTemplate.postForEntity(stringApiAddress, newCourse, null);
@@ -94,14 +82,12 @@ public abstract class CourseControllerTest {
                 break;
             }
         }
+        assertNotNull(foundCourse);
         assertEquals(newCourse.getName(), foundCourse.getName());
         assertNotEquals(newCourse.getId(), foundCourse.getId());
         assertTrue(wasFound);
     }
 
-    @Test
-    @Order(12)
-    @DisplayName("selectAllCourses() endpoint: .../apiPrefix")
     public void selectAllCourses() {
         ResponseEntity<List<Course>> responseEntity = restTemplate.exchange(stringApiAddress, HttpMethod.GET, null, new ParameterizedTypeReference<List<Course>>(){});
         List<Course> listOfCourses = courseController.selectAllCourses();
@@ -111,24 +97,10 @@ public abstract class CourseControllerTest {
                 CourseServiceTest.getCourseListAsJsonString(responseEntity.getBody())
         );
     }
+    public void selectCourseString() throws Exception { selectCourse( CourseController.selectCourseAsStringMapping ); }
 
-    @Test
-    @Order(13)
-    @DisplayName("selectCourseString() endpoint: .../apiPrefix" + CourseController.selectCourseAsStringMapping)
-    public void selectCourseString() {
-        selectCourse( CourseController.selectCourseAsStringMapping );
-    }
+    public void selectCourseUUID() throws Exception { selectCourse( CourseController.selectCourseAsUUIDMapping ); }
 
-    @Test
-    @Order(14)
-    @DisplayName("selectCourseUUID() endpoint: .../apiPrefix" + CourseController.selectCourseAsUUIDMapping)
-    public void selectCourseUUID() {
-        selectCourse( CourseController.selectCourseAsUUIDMapping );
-    }
-
-    @Test
-    @Order(15)
-    @DisplayName("deleteCourse() endpoint: .../apiPrefix" + CourseController.deleteCourseMapping)
     public void deleteCourse() {
         List<Course> listOfCourses = courseService.selectAllCourses();
         Course course = listOfCourses.get(listOfCourses.size()-1);
@@ -138,10 +110,7 @@ public abstract class CourseControllerTest {
         assertFalse(listOfCourses.contains(course));
     }
 
-    @Test
-    @Order(16)
-    @DisplayName("updateCourse() endpoint .../apiPrefix" + CourseController.updateCourseCourseMapping)
-    public void updateCourse() {
+    public void updateCourse() throws Exception {
         List<Course> listOfCourses = courseService.selectAllCourses();
         Course course = listOfCourses.get(listOfCourses.size()-1);
         Course modifiedCourse = new Course(course.getId(), courseName+2);
@@ -155,7 +124,7 @@ public abstract class CourseControllerTest {
         assertEquals(modifiedCourse.toString(), selectedCourse.toString());
     }
 
-    private void selectCourse(String courseControllerSelectCourseAs_UUID_or_String_Mapping) {
+    private void selectCourse(String courseControllerSelectCourseAs_UUID_or_String_Mapping) throws Exception {
         List<Course> listOfCourses = this.courseService.selectAllCourses();
         assertNotNull(listOfCourses);
         assertFalse(listOfCourses.isEmpty());

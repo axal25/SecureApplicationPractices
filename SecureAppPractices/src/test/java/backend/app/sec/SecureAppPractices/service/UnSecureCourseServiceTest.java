@@ -1,14 +1,13 @@
 package backend.app.sec.SecureAppPractices.service;
 
 import org.flywaydb.core.Flyway;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.DependsOn;
+import org.springframework.stereotype.Component;
 
-@SpringBootTest
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@Component
+@DependsOn("unSecureCourseService")
 public class UnSecureCourseServiceTest extends CourseServiceTest {
     private final CourseService courseService;
     private final Flyway flyway;

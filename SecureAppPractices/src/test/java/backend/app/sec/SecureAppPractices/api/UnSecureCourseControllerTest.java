@@ -10,20 +10,20 @@ import org.springframework.stereotype.Component;
 import java.net.MalformedURLException;
 
 @Component
-@DependsOn("secureCourseController")
-public class SecureCourseControllerTest extends CourseControllerTest {
-    final static String apiPrefix = "/secureApi/courses";
+@DependsOn("unSecureCourseController")
+public class UnSecureCourseControllerTest extends CourseControllerTest {
+    final static String apiPrefix = "/unSecureApi/courses";
     private final CourseController courseController;
     private final CourseService courseService;
     private final TestRestTemplate restTemplate;
 
     @Autowired
-    public SecureCourseControllerTest(
-            @Qualifier("secureCourseController") CourseController courseController,
-            @Qualifier("secureCourseService") CourseService courseService,
+    public UnSecureCourseControllerTest(
+            @Qualifier("unSecureCourseController") CourseController courseController,
+            @Qualifier("unSecureCourseService") CourseService courseService,
             TestRestTemplate restTemplate
     ) throws MalformedURLException {
-        super(courseController, courseService, restTemplate, SecureCourseControllerTest.apiPrefix);
+        super(courseController, courseService, restTemplate, UnSecureCourseControllerTest.apiPrefix);
         this.courseController = courseController;
         this.courseService = courseService;
         this.restTemplate = restTemplate;

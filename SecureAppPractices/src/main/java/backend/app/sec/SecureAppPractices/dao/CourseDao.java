@@ -1,11 +1,11 @@
 package backend.app.sec.SecureAppPractices.dao;
 
-import backend.app.sec.SecureAppPractices.configuration.datasource.properties.CustomDataSourceProperties;
 import backend.app.sec.SecureAppPractices.model.Course;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import java.sql.ResultSetMetaData;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -33,10 +33,7 @@ public abstract class CourseDao {
     }
 
     public int insertCourse(UUID id, Course course) throws Exception {
-        final String uuidInjection;
-        if(isSchemaAndTableWhereIdIsVarChar()) uuidInjection = "CAST(? AS VARCHAR )";
-        else uuidInjection = "?";
-        final String sqlQuery = "INSERT INTO " + schema + "." + table + " (id, name) VALUES (" + uuidInjection + ", ?)";
+        final String sqlQuery = "INSERT INTO " + schema + "." + table + " (id, name) VALUES (" + getUUIDinjection() + ", ?)";
         return jdbcTemplate.update(
                 sqlQuery,
                 course.getId(),
@@ -56,22 +53,92 @@ public abstract class CourseDao {
         );
     }
 
-    abstract public Optional<Course> selectCourse(UUID id);
+    public Optional<Course> selectCourse(UUID id) throws Exception {
+        final String sqlQuery = "SELECT id, name FROM " + schema + "." + table + " WHERE id = " + getUUIDinjection() + ";";
+        return Optional.ofNullable(
+                jdbcTemplate.queryForObject(
+                        sqlQuery,
+                        new Object[]{id},
+                        (resultSet, i) -> {
+                            final UUID resultId = UUID.fromString(resultSet.getString("id"));
+                            final String resultName = resultSet.getString("name");
+                            return new Course(resultId, resultName);
+                        }
+                )
+        );
+    }
 
-    abstract public int deleteCourse(UUID id);
+    public String selectCourse(String stringId) throws Exception {
+        final String sqlQuery = "SELECT id, name FROM " + schema + "." + table + " WHERE id = " + getStringinjection(stringId) + ";";
+        return jdbcTemplate.queryForObject(
+                sqlQuery,
+                (resultSet, i) -> {
+                    final UUID resultId = UUID.fromString(resultSet.getString("id"));
+                    final String resultName = resultSet.getString("name");
+                    return new Course(resultId, resultName).toString();
+                }
+        );
+    }
 
-    abstract public int updateCourse(UUID id, Course course);
+    public int deleteCourse(UUID id) throws Exception {
+        final String sqlQuery = "DELETE FROM " + schema + "." + table + " WHERE id = " + getUUIDinjection() + ";";
+        return jdbcTemplate.update(sqlQuery, id);
+    }
 
-    public String selectCourse(String stringId) {
-        return CourseDao.defaultMessage;
+    public int updateCourse(UUID id, Course course) throws Exception {
+        final String sqlQuery = "UPDATE " + schema + "." + table + " SET name = ? WHERE id = " + getUUIDinjection() + ";";
+        return jdbcTemplate.update(sqlQuery, course.getName(), id);
     }
 
     public String runExecuteGetsNoResultsFromDatabase(String query) {
-        return CourseDao.defaultMessage;
+        try {
+            query = query.replaceFirst("^\"", "");
+            query = query.replaceFirst("\"$", "");
+            jdbcTemplate.execute(query);
+            return "Query has been run on schema 'unsafe': \n" + query;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "Query run has FAILED on schema 'unsafe': \n" + query;
+        }
     }
 
     public String runQueryGetsResultsFromDatabase(String query) {
-        return CourseDao.defaultMessage;
+        query = query.replaceFirst("^\"", "");
+        query = query.replaceFirst("\"$", "");
+        StringBuilder response = null;
+        List<String> listOfJsonObjects = jdbcTemplate.query(
+                query,
+                (resultSet, i) -> {
+                    StringBuilder jsonObject = new StringBuilder().append("{");
+                    ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
+                    for(i=1; i<=resultSetMetaData.getColumnCount(); i++) {
+                        if(i!=1) jsonObject.append(", ");
+                        jsonObject.append(resultSetMetaData.getColumnName(i)).append(": ").append(resultSet.getString(i));
+                    }
+                    jsonObject.append("}");
+                    String correctJson = jsonObject.toString().replaceAll(
+                            "(?<=\\{|, ?)([a-zA-Z]+?): ?(?![ \\{\\[])(.+?)(?=,|})", "\"$1\": \"$2\"");
+                    return correctJson;
+                }
+        );
+        for (String jsonObject : listOfJsonObjects ) {
+            if(response == null) response = new StringBuilder().append("[");
+            else response.append(", ");
+            response.append(jsonObject);
+        }
+        response.append("]");
+
+        return response.toString();
+    }
+
+    private String getUUIDinjection() throws Exception {
+        if(isSchemaAndTableWhereIdIsVarChar()) return "CAST(? AS VARCHAR )";
+        else return "?";
+    }
+
+    private String getStringinjection(String stringId) throws Exception {
+        if(isSchemaAndTableWhereIdIsVarChar()) return "'" + stringId + "'";
+        else return "(CAST( '" + stringId + "' AS UUID))";
     }
 
     private boolean isSchemaAndTableWhereIdIsVarChar() throws Exception {

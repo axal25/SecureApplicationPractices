@@ -29,16 +29,16 @@ public abstract class CourseController {
     public List<Course> selectAllCourses() { return courseService.selectAllCourses(); }
 
     @GetMapping(path = CourseController.selectCourseAsUUIDMapping)
-    public Course selectCourse(@PathVariable("id") UUID id) { return courseService.selectCourse( id ).orElse( null ); }
+    public Course selectCourse(@PathVariable("id") UUID id) throws Exception { return courseService.selectCourse( id ).orElse( null ); }
 
     @GetMapping(path = CourseController.selectCourseAsStringMapping)
-    public String selectCourse(@PathVariable("id") String stringId) { return courseService.selectCourse( stringId ); }
+    public String selectCourse(@PathVariable("id") String stringId) throws Exception { return courseService.selectCourse( stringId ); }
 
     @DeleteMapping(path = CourseController.deleteCourseMapping)
-    public void deleteCourse(@PathVariable("id") UUID id) { courseService.deleteCourse( id ); }
+    public void deleteCourse(@PathVariable("id") UUID id) throws Exception { courseService.deleteCourse( id ); }
 
     @PutMapping(path = CourseController.updateCourseCourseMapping)
-    public int updateCourse(@PathVariable("id") UUID id, @RequestBody @Valid @NotNull Course course) { return courseService.updateCourse( id, course ); }
+    public int updateCourse(@PathVariable("id") UUID id, @RequestBody @Valid @NotNull Course course) throws Exception { return courseService.updateCourse( id, course ); }
 
     @GetMapping(path = CourseController.runExecuteGetsNoResultsFromDatabaseMapping)
     public String runExecuteGetsNoResultsFromDatabase(@QueryParam("query") String query) { return courseService.runExecuteGetsNoResultsFromDatabase( query ); }

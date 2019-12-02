@@ -43,10 +43,7 @@ public abstract class CourseServiceTest {
                 courseAmountFrom_CourseService_checkIfTwoIdenticalIdCanExist;
     }
 
-    @Order(1)
-    @DisplayName("selectAllCourses & database repeatable initiation (Flyway .clean and .migration)")
-    @Test
-    void databaseRepeatableInitiation() {
+    public void databaseRepeatableInitiation() {
         int courseCounter = 0;
         int courseCounterFrom_R__RepeatableMigration_CourseTable_sql = 0;
         int courseCounterFrom_SecureCourseService = 0;
@@ -83,10 +80,7 @@ public abstract class CourseServiceTest {
         assertEquals(courseAmountFrom_CourseService, courseCounterFrom_SecureCourseService);
     }
 
-    @DisplayName("selectCourse by String id & UUID id")
-    @Test
-    @Order(2)
-    void selectCourseByStringIdAndByUuidId() {
+    public void selectCourseByStringIdAndByUuidId() throws Exception {
         List<Course> listOfCourses = courseService.selectAllCourses();
         assertNotNull(listOfCourses);
         assertFalse(listOfCourses.isEmpty());
@@ -103,10 +97,7 @@ public abstract class CourseServiceTest {
         assertEquals(exampleCourse.toString(), selectedCourseByStringId);
     }
 
-    @DisplayName("selectCourse by String id & UUID id Exception")
-    @Test
-    @Order(3)
-    void selectCourseByStringIdAndByUuidIdException() {
+    public void selectCourseByStringIdAndByUuidIdException() throws Exception {
         List<Course> listOfCourses = courseService.selectAllCourses();
         assertNotNull(listOfCourses);
         assertFalse(listOfCourses.isEmpty());
@@ -123,44 +114,41 @@ public abstract class CourseServiceTest {
         String courseStringId = courseUuidId.toString();
 
 
-        Thread selectedCourseByUuidId = new Thread(() -> { courseService.selectCourse( courseUuidId ).orElse(null); });
-        assertThrows(EmptyResultDataAccessException.class, selectedCourseByUuidId::run);
+        FunctionalInterface selectedCourseByUuidId = (() -> { return courseService.selectCourse( courseUuidId ).orElse(null); });
+        assertThrows(EmptyResultDataAccessException.class, selectedCourseByUuidId::executeThrowsException);
         EmptyResultDataAccessException e1 = null;
-        try { selectedCourseByUuidId.run(); } catch(EmptyResultDataAccessException eTmp1) { e1 = eTmp1; }
+        try { selectedCourseByUuidId.executeThrowsException(); } catch(EmptyResultDataAccessException eTmp1) { e1 = eTmp1; }
         Pattern exceptionMessagePattern = Pattern.compile(emptyResultDataAccessExceptionPattern);
         Matcher exceptionMessageMatcher = exceptionMessagePattern.matcher( e1.toString() );
         assertTrue(exceptionMessageMatcher.matches());
 
-        Thread selectedCourseByStringId = new Thread(() -> { courseService.selectCourse( courseStringId ); });
-        assertThrows(EmptyResultDataAccessException.class, selectedCourseByStringId::run);
+        FunctionalInterface selectedCourseByStringId = (() -> { return new Gson().fromJson(courseService.selectCourse( courseStringId ), Course.class); });
+        assertThrows(EmptyResultDataAccessException.class, selectedCourseByStringId::executeThrowsException);
         EmptyResultDataAccessException e2 = null;
-        try { selectedCourseByStringId.run(); } catch(EmptyResultDataAccessException eTmp2) { e2 = eTmp2; }
+        try { selectedCourseByStringId.executeThrowsException(); } catch(EmptyResultDataAccessException eTmp2) { e2 = eTmp2; }
         exceptionMessageMatcher = exceptionMessagePattern.matcher( e2.toString() );
         assertTrue(exceptionMessageMatcher.matches());
 
-        Thread selectedCourseByStringNOTid = new Thread(() -> { courseService.selectCourse( "Completely Not Id" ); });
+        FunctionalInterface selectedCourseByStringNOTid = (() -> { return new Gson().fromJson(courseService.selectCourse( "Completely Not Id" ), Course.class); });
         if( this.courseService instanceof SecureCourseService) {
-            assertThrows(DataIntegrityViolationException.class, selectedCourseByStringNOTid::run);
+            assertThrows(DataIntegrityViolationException.class, selectedCourseByStringNOTid::executeThrowsException);
             DataIntegrityViolationException e3 = null;
-            try { selectedCourseByStringNOTid.run(); } catch(DataIntegrityViolationException eTmp3) { e3 = eTmp3; }
+            try { selectedCourseByStringNOTid.executeThrowsException(); } catch(DataIntegrityViolationException eTmp3) { e3 = eTmp3; }
             exceptionMessagePattern = Pattern.compile(dataIntegrityViolationExceptionPattern);
             exceptionMessageMatcher = exceptionMessagePattern.matcher( e3.toString() );
             assertTrue(exceptionMessageMatcher.matches());
         }
         else if( this.courseService instanceof  UnSecureCourseService) {
-            assertThrows(EmptyResultDataAccessException.class, selectedCourseByStringNOTid::run);
+            assertThrows(EmptyResultDataAccessException.class, selectedCourseByStringNOTid::executeThrowsException);
             EmptyResultDataAccessException e3 = null;
-            try { selectedCourseByStringNOTid.run(); } catch(EmptyResultDataAccessException eTmp3) { e3 = eTmp3; }
+            try { selectedCourseByStringNOTid.executeThrowsException(); } catch(EmptyResultDataAccessException eTmp3) { e3 = eTmp3; }
             exceptionMessagePattern = Pattern.compile(emptyResultDataAccessExceptionPattern);
             exceptionMessageMatcher = exceptionMessagePattern.matcher( e3.toString() );
             assertTrue(exceptionMessageMatcher.matches());
         }
     }
 
-    @DisplayName("insertCourse")
-    @Test
-    @Order(4)
-    void insertCourse() throws Exception {
+    public void insertCourse() throws Exception {
         List<Course> listOfCourses = courseService.selectAllCourses();
         assertNotNull(listOfCourses);
         Course course1 = new Course(UUID.randomUUID(), courseName + courseNameCounter);
@@ -183,10 +171,7 @@ public abstract class CourseServiceTest {
         assertEquals(course2.getName(), selectedCourse2.getName());
     }
 
-    @DisplayName("deleteCourse & selectCourse (asUUID, asString) Exception")
-    @Test
-    @Order(5)
-    void deleteCourse() {
+    public void deleteCourse() throws Exception {
         final String courseName = "Test Course inserted from SecureCourseServiceTest #";
         List<Course> listOfCourses = courseService.selectAllCourses();
         assertNotNull(listOfCourses);
@@ -213,15 +198,15 @@ public abstract class CourseServiceTest {
 
         UUID courseUuidId = course.getId();
         String courseStringId = courseUuidId.toString();
-        Thread selectCourseAsUUID = new Thread(() -> { courseService.selectCourse(courseUuidId).orElse(null); });
-        Thread selectCourseAsString = new Thread(() -> { courseService.selectCourse(courseStringId); });
-        assertThrows(EmptyResultDataAccessException.class, selectCourseAsUUID::run);
-        assertThrows(EmptyResultDataAccessException.class, selectCourseAsString::run);
+        FunctionalInterface selectCourseAsUUID = (() -> { return courseService.selectCourse(courseUuidId).orElse(null); });
+        FunctionalInterface selectCourseAsString = (() -> { return new Gson().fromJson(courseService.selectCourse(courseStringId), Course.class); });
+        assertThrows(EmptyResultDataAccessException.class, selectCourseAsUUID::executeThrowsException);
+        assertThrows(EmptyResultDataAccessException.class, selectCourseAsString::executeThrowsException);
 
         EmptyResultDataAccessException e1 = null;
         EmptyResultDataAccessException e2 = null;
-        try{ selectCourseAsUUID.run(); } catch(EmptyResultDataAccessException eTmp1) { e1 = eTmp1; }
-        try { selectCourseAsString.run(); } catch(EmptyResultDataAccessException eTmp2) { e2 = eTmp2; }
+        try{ selectCourseAsUUID.executeThrowsException(); } catch(EmptyResultDataAccessException eTmp1) { e1 = eTmp1; }
+        try { selectCourseAsString.executeThrowsException(); } catch(EmptyResultDataAccessException eTmp2) { e2 = eTmp2; }
         Pattern exceptionMessagePattern = Pattern.compile("^org.springframework.dao.EmptyResultDataAccessException: Incorrect result size: expected 1, actual 0.*$");
         Matcher exceptionMessageMatcher = exceptionMessagePattern.matcher( e1.toString() );
         assertTrue(exceptionMessageMatcher.matches());
@@ -229,10 +214,7 @@ public abstract class CourseServiceTest {
         assertTrue(exceptionMessageMatcher.matches());
     }
 
-    @DisplayName("updateCourse")
-    @Test
-    @Order(6)
-    void updateCourse() {
+    public void updateCourse() throws Exception {
         List<Course> listOfCourses = courseService.selectAllCourses();
         courseNameCounter = listOfCourses.size() + 1 - startingCourseAmount;
         assertEquals(currentCourseAmount, listOfCourses.size());

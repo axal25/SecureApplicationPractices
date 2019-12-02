@@ -35,13 +35,13 @@ public abstract class CourseService {
         return courseDao.selectAllCourses();
     }
 
-    public Optional<Course> selectCourse(UUID id) { return courseDao.selectCourse( id ); }
+    public Optional<Course> selectCourse(UUID id) throws Exception { return courseDao.selectCourse( id ); }
 
-    public String selectCourse(String stringId) { return courseDao.selectCourse( stringId ); }
+    public String selectCourse(String stringId) throws Exception { return courseDao.selectCourse( stringId ); }
 
-    public int deleteCourse(UUID id) { return courseDao.deleteCourse( id ); }
+    public int deleteCourse(UUID id) throws Exception { return courseDao.deleteCourse( id ); }
 
-    public int updateCourse(UUID id, Course course) { return courseDao.updateCourse( id, course ); }
+    public int updateCourse(UUID id, Course course) throws Exception { return courseDao.updateCourse( id, course ); }
 
     public String runExecuteGetsNoResultsFromDatabase(String query) { return courseDao.runExecuteGetsNoResultsFromDatabase(query); }
 

@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin
-@RequestMapping("UnSecureApi/courses")
+@RequestMapping("unSecureApi/courses")
 @RestController
 public class UnSecureCourseController extends CourseController {
 
