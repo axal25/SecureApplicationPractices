@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin
 @RequestMapping("secureApi/courses")
-@RestController
+@RestController("secureCourseController")
 public class SecureCourseController extends CourseController {
 
     private final CourseService courseService;

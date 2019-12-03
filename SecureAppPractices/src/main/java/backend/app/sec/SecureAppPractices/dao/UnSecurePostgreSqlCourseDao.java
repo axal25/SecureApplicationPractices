@@ -9,14 +9,14 @@ import org.springframework.stereotype.Repository;
 public class UnSecurePostgreSqlCourseDao extends CourseDao {
 
     private final JdbcTemplate jdbcTemplate;
-    private final String schema = CourseDao.unSafeSchemaName;
-    private final String table = CourseDao.unSafeTableName;
+    public static final String schema = CourseDao.unSafeSchemaName;
+    public static final String table = CourseDao.unSafeTableName;
 
     @Autowired
-    public UnSecurePostgreSqlCourseDao(@Qualifier("postgresUserJdbcTemplate") JdbcTemplate jdbcTemplate) {
+    public UnSecurePostgreSqlCourseDao(@Qualifier("limitedUnSafeUserJdbcTemplate") JdbcTemplate jdbcTemplate) {
         super(jdbcTemplate);
         this.jdbcTemplate = jdbcTemplate;
-        super.setSchema(this.schema);
-        super.setTable(this.table);
+        super.setSchema(UnSecurePostgreSqlCourseDao.schema);
+        super.setTable(UnSecurePostgreSqlCourseDao.table);
     }
 }

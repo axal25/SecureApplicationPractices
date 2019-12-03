@@ -62,14 +62,15 @@ public abstract class CourseService {
         try {
             final UUID permId = UUID.randomUUID();
             final String preDefName = checkIfTwoIdenticalIdCanExistPreDefName;
-            this.courseDao.insertCourse(permId, new Course(permId, preDefName));
-            this.courseDao.insertCourse(permId, new Course(permId, preDefName));
-            checkIfTwoIdenticalIdCanExistAmount = 2;
+            checkIfTwoIdenticalIdCanExistAmount = 0;
+            this.courseDao.insertCourse(permId, new Course(permId, preDefName + checkIfTwoIdenticalIdCanExistAmount));
+            checkIfTwoIdenticalIdCanExistAmount++;
+            this.courseDao.insertCourse(permId, new Course(permId, preDefName + checkIfTwoIdenticalIdCanExistAmount));
+            checkIfTwoIdenticalIdCanExistAmount++;
             System.err.println(resultPrefix + "would NOT" + resultSuffix);
             return false;
         }
         catch(Exception e) {
-            checkIfTwoIdenticalIdCanExistAmount = 1;
             System.err.println(resultPrefix + "WOULD" + resultSuffix);
             return true;
         }

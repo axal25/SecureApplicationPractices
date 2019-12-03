@@ -9,8 +9,8 @@ import org.springframework.stereotype.Repository;
 public class SecurePostgreSqlCourseDao extends CourseDao {
 
     private final JdbcTemplate jdbcTemplate;
-    private final String schema = CourseDao.safeSchemaName;
-    private final String table = CourseDao.safeTableName;
+    public static final String schema = CourseDao.safeSchemaName;
+    public static final String table = CourseDao.safeTableName;
 
     @Autowired
     public SecurePostgreSqlCourseDao(@Qualifier("limitedSafeUserJdbcTemplate") JdbcTemplate jdbcTemplate) {

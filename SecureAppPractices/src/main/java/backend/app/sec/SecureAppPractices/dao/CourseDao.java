@@ -9,11 +9,13 @@ import java.sql.ResultSetMetaData;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Setter
 @Getter
 public abstract class CourseDao {
-
+    private static final boolean isDebugging = true;
     public static final String defaultMessage = "This method is unsecure and can't be used from this api. You can use this from UnSecureController at: .../UnSecureApi/courses";
     final private JdbcTemplate jdbcTemplate;
     private String schema = null;
@@ -91,39 +93,32 @@ public abstract class CourseDao {
     }
 
     public String runExecuteGetsNoResultsFromDatabase(String query) {
-        try {
-            query = query.replaceFirst("^\"", "");
-            query = query.replaceFirst("\"$", "");
-            jdbcTemplate.execute(query);
-            return "Query has been run on schema 'unsafe': \n" + query;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return "Query run has FAILED on schema 'unsafe': \n" + query;
-        }
+        query = removeDoubleQuotesIfPresent(query);
+        jdbcTemplate.execute(query);
+        return "Query has been run on schema 'unsafe': \n" + query;
     }
 
     public String runQueryGetsResultsFromDatabase(String query) {
-        query = query.replaceFirst("^\"", "");
-        query = query.replaceFirst("\"$", "");
-        StringBuilder response = null;
+        query = removeDoubleQuotesIfPresent(query);
         List<String> listOfJsonObjects = jdbcTemplate.query(
                 query,
                 (resultSet, i) -> {
                     StringBuilder jsonObject = new StringBuilder().append("{");
                     ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
                     for(i=1; i<=resultSetMetaData.getColumnCount(); i++) {
-                        if(i!=1) jsonObject.append(", ");
-                        jsonObject.append(resultSetMetaData.getColumnName(i)).append(": ").append(resultSet.getString(i));
+                        if(i!=1) jsonObject.append(",");
+                        jsonObject
+                                .append("\"").append(resultSetMetaData.getColumnName(i)).append("\"")
+                                .append(":")
+                                .append("\"").append(resultSet.getString(i)).append("\"");
                     }
                     jsonObject.append("}");
-                    String correctJson = jsonObject.toString().replaceAll(
-                            "(?<=\\{|, ?)([a-zA-Z]+?): ?(?![ \\{\\[])(.+?)(?=,|})", "\"$1\": \"$2\"");
-                    return correctJson;
+                    return jsonObject.toString();
                 }
         );
+        StringBuilder response = new StringBuilder().append("[");
         for (String jsonObject : listOfJsonObjects ) {
-            if(response == null) response = new StringBuilder().append("[");
-            else response.append(", ");
+            if(response.toString().compareTo("[") != 0) response.append(",");
             response.append(jsonObject);
         }
         response.append("]");
@@ -152,5 +147,17 @@ public abstract class CourseDao {
                             .append(this.schema).append(" or bad table parameter: ")
                             .append(this.table).toString()
             );
+    }
+
+    private String removeDoubleQuotesIfPresent(String query) {
+        Pattern queryPattern = Pattern.compile("^\".*\"$");
+        Matcher queryMatcher = queryPattern.matcher(query);
+        if(isDebugging) System.out.println("entry query: >>" + query + "<<");
+        if(queryMatcher.matches()) {
+            query = query.replaceFirst("^\"", "");
+            query = query.replaceFirst("\"$", "");
+            if(isDebugging) System.out.println("stripped query: >>" + query + "<<");
+        }
+        return query;
     }
 }

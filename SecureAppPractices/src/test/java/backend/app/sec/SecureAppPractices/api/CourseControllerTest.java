@@ -4,18 +4,26 @@ import backend.app.sec.SecureAppPractices.configuration.ServerPortCustomizer;
 import backend.app.sec.SecureAppPractices.model.Course;
 import backend.app.sec.SecureAppPractices.service.CourseService;
 import backend.app.sec.SecureAppPractices.service.CourseServiceTest;
+import backend.app.sec.SecureAppPractices.service.FunctionalInterface;
+import backend.app.sec.SecureAppPractices.service.UnSecureCourseService;
 import com.google.gson.Gson;
 import lombok.Getter;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
 
+import javax.sql.DataSource;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.sql.ResultSetMetaData;
 import java.util.List;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -23,7 +31,7 @@ public abstract class CourseControllerTest {
 
     @Getter
     private final String courseName = "Test Course inserted from " + this.getClass().getSimpleName() + " #";
-
+    private static final String incorrectResultSizeDataAccessExceptionPattern = "^org.springframework.dao.IncorrectResultSizeDataAccessException: Incorrect result size: expected 1, actual 2$";
     private final static int expectedPort = ServerPortCustomizer.defaultPort;
     private final String apiPrefix;
     private final String selectAllCoursesEndpoint;
@@ -112,16 +120,35 @@ public abstract class CourseControllerTest {
 
     public void updateCourse() throws Exception {
         List<Course> listOfCourses = courseService.selectAllCourses();
-        Course course = listOfCourses.get(listOfCourses.size()-1);
+        Course course = null;
+        if(this.courseService instanceof UnSecureCourseService) {
+            course = listOfCourses.get(listOfCourses.size()-1);
+            assertNotNull(course);
+            assertNotNull(course.getId());
+            assertNotNull(course.getName());
+            Course coursesWithSameIdFromUnSecureCourseService = course;
+            FunctionalInterface twoCoursesWithSameIdFromUnSecureCourseService = () -> { courseService.selectCourse(coursesWithSameIdFromUnSecureCourseService.getId()).orElse(null); };
+            assertThrows(IncorrectResultSizeDataAccessException.class, twoCoursesWithSameIdFromUnSecureCourseService::executeThrowsException);
+            IncorrectResultSizeDataAccessException e1 = null;
+            try { twoCoursesWithSameIdFromUnSecureCourseService.executeThrowsException(); } catch(IncorrectResultSizeDataAccessException tmpE1) { e1 = tmpE1; }
+            assertNotNull(e1);
+            Pattern exceptionMessagePattern = Pattern.compile(incorrectResultSizeDataAccessExceptionPattern);
+            Matcher exceptionMessageMatcher = exceptionMessagePattern.matcher( e1.toString() );
+            assertTrue(exceptionMessageMatcher.matches());
+        }
+        course = listOfCourses.get(listOfCourses.size()-3);
+        assertNotNull(course);
+        assertNotNull(course.getId());
+        assertNotNull(course.getName());
         Course modifiedCourse = new Course(course.getId(), courseName+2);
         String endpointSuffix = CourseController.updateCourseCourseMapping.replaceFirst("\\{.*\\}", modifiedCourse.getId().toString());
         HttpEntity<Course> responseEntityModifiedCourse = new HttpEntity<Course>(modifiedCourse);
         ResponseEntity<Integer> responseEntityInt = restTemplate.exchange(stringApiAddress + endpointSuffix, HttpMethod.PUT, responseEntityModifiedCourse, Integer.class);
-        Course selectedCourse = courseService.selectCourse(course.getId()).orElse(null);
-        assertNotNull(selectedCourse);
-        assertEquals(selectedCourse.getId(), course.getId());
-        assertNotEquals(selectedCourse.getName(), course.getName());
-        assertEquals(modifiedCourse.toString(), selectedCourse.toString());
+        Course selectedCourse2 = courseService.selectCourse(course.getId()).orElse(null);
+        assertNotNull(selectedCourse2);
+        assertEquals(selectedCourse2.getId(), course.getId());
+        assertNotEquals(selectedCourse2.getName(), course.getName());
+        assertEquals(modifiedCourse.toString(), selectedCourse2.toString());
     }
 
     private void selectCourse(String courseControllerSelectCourseAs_UUID_or_String_Mapping) throws Exception {
@@ -132,14 +159,12 @@ public abstract class CourseControllerTest {
         assertNotNull(course);
         assertNotNull(course.getId());
         assertNotNull(course.getId().toString());
-        System.out.println("course.getId().toString() = " + course.getId().toString());
         listOfCourses = this.courseService.selectAllCourses();
         assertEquals(course.toString(), listOfCourses.get(listOfCourses.size()-1).toString());
         String courseFromSecureCourseService = courseService.selectCourse(course.getId().toString());
         assertEquals(courseFromSecureCourseService, course.toString());
         String endpointSuffix = courseControllerSelectCourseAs_UUID_or_String_Mapping.replaceFirst("\\{.*\\}", course.getId().toString());
         String responseStringCourse = restTemplate.getForObject(url + endpointSuffix, String.class);
-        System.out.println("responseStringCourse: " + responseStringCourse);
         Course responseCourse = new Gson().fromJson(responseStringCourse, Course.class);
         assertNotNull(responseCourse);
         assertEquals(course.toString(), responseCourse.toString());
