@@ -10,7 +10,7 @@ Project for Project study course in University. Online study platform teaching g
 Swagger api is available at [API](http://localhost:8080/swagger-ui.html#/course-controller) \
 [Fully deployed back-end application on Google cloud platform](https://braided-tracker-259922.appspot.com/swagger-ui.html)
 ---
-### To do
+### BACK END To do
     1. [DONE] 3 Different datasources: 
         1. [DONE] postgres - used only for migrations; 
         2. [DONE] limited safe - for safe api; 
@@ -19,7 +19,12 @@ Swagger api is available at [API](http://localhost:8080/swagger-ui.html#/course-
     3. [DONE] Endpoinds exposed to SQLi (SQL Injection)
         1. [DONE] Adding and modifying
     4. [DONE] Unified classes connected to Secure & Unsecure Api, includin test classes
-    5. [Maybe in future] Creating on request new schema, table and user - one per request for end user to safely play around 
+    5. Deplyoment of newest version to GCP
+    6. Modify tests so they would work on GCP
+    7. [Maybe in future] Creating on request new schema, table and user - one per request for end user to safely play around 
+---
+### FRONT END To do
+    1. 
 ---
 ### Useful links
 [Lombok package & plugin config](https://www.baeldung.com/lombok-ide) \
