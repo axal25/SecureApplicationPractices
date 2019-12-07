@@ -223,6 +223,7 @@ $do$
                 WHERE  rolname = 'limitedunsafe'
             ) THEN
             CREATE ROLE limitedunsafe LOGIN PASSWORD 'limitedunsafe_password';
+            GRANT limitedunsafe TO postgres;
         END IF;
     END;
 $do$;
