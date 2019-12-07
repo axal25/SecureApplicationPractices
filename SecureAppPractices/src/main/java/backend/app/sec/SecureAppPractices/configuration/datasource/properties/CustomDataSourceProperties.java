@@ -25,8 +25,8 @@ public class CustomDataSourceProperties {
     // No public getters (or setters)
     private static final boolean isDebugging = false;
     private static final boolean isLesserDebugging = isDebugging || false;
-//    private static final String databaseLocation = CustomDataSourcePatterns.DatabaseLocation.localhost;
-    private static final String databaseLocation = CustomDataSourcePatterns.DatabaseLocation.gcp;
+    private static final String databaseLocation = CustomDataSourcePatterns.DatabaseLocation.localhost;
+//    private static final String databaseLocation = CustomDataSourcePatterns.DatabaseLocation.gcp;
 
     private boolean getIsDebugging() { return isDebugging; }
     private String getDatabaseLocation() { return databaseLocation; }
