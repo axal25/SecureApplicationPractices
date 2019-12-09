@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="menu_navigation_view">
+
+    <item
+        android:id="@+id/nav_course_home"
+        android:checkable="true"
+        android:icon="@drawable/ic_home"
+        android:title="Home" />
+
+    <item android:title="Course type">
+        <menu>
+            <group android:id="@+id/group_type">
+                <item
+                    android:id="@+id/nav_course_theoretical"
+                    android:checkable="true"
+                    android:icon="@drawable/ic_course_theoretical"
+                    android:title="Theoretical" />
+                <item
+                    android:id="@+id/nav_course_practical"
+                    android:checkable="true"
+                    android:icon="@drawable/ic_course_practical"
+                    android:title="Practical" />
+            </group>
+        </menu>
+    </item>
+
+    <item android:title="Course number">
+        <menu>
+            <group android:id="@+id/group_number">
+                <item
+                    android:id="@+id/nav_course_1"
+                    android:checkable="true"
+                    android:icon="@drawable/ic_course_1"
+                    android:title="Course 1" />
+                <item
+                    android:id="@+id/nav_course_2"
+                    android:checkable="true"
+                    android:icon="@drawable/ic_course_2"
+                    android:title="Course 2" />
+            </group>
+        </menu>
+    </item>
+
+</menu>

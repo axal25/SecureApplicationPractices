@@ -1,0 +1,29 @@
+<resources>
+    <string name="app_name">SecureAppPractices</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="text_view_1_fragment_home">Welcome to your Home @</string>
+    <string name="text_view_2_fragment_home">Secure Practices Application</string>
+    <string name="text_view_1_fragment_course_1_practical">1 Course 1 Practical</string>
+    <string name="text_view_2_fragment_course_1_practical">2 Course 1 Practical</string>
+    <string name="text_view_1_fragment_course_1_theoretical">1 Course 1 Theoretical</string>
+    <string name="text_view_2_fragment_course_1_theoretical">2 Course 1 Theoretical</string>
+    <string name="text_view_1_fragment_course_2_practical">1 Course 2 Practical</string>
+    <string name="text_view_2_fragment_course_2_practical">2 Course 2 Practical</string>
+    <string name="text_view_1_fragment_course_2_theoretical">1 Course 2 Theoretical</string>
+    <string name="text_view_2_fragment_course_2_theoretical">2 Course 2 Theoretical</string>
+    <string name="text_view_1_nav_header">Courses</string>
+    <string name="text_view_2_nav_header">Choose your course</string>
+    <string name="prev_button_text_practical_course">Previous</string>
+    <string name="next_button_text_practical_course">Next</string>
+    <string name="run_button_text_practical_course">Run</string>
+    <string name="text_input_edit_text_1_practical_course">query to be sent - you can mess with it</string>
+    <string name="text_input_edit_text_2_practical_course">query to be sent - you can mess with it</string>
+<!--    <string name="text_input_edit_text_query1">http://localhost:8080/unSecureApi/courses/</string>-->
+<!--    ifconfig -->
+<!--    <string name="text_input_edit_text_query1">http://192.168.0.54:8080/unSecureApi/courses/</string>-->
+    <string name="text_input_edit_text_query1">Query place holder 1</string>
+    <string name="text_input_edit_text_query2">Query place holder 2</string>
+    <string name="edit_text_result_1">Place holder for response 1</string>
+    <string name="edit_text_result_2">Place holder for response 2</string>
+</resources>
