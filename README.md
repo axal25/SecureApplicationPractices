@@ -24,7 +24,10 @@ Swagger api is available at [API](http://localhost:8080/swagger-ui.html#/course-
     7. [Maybe in future] Creating on request new schema, table and user - one per request for end user to safely play around 
 ---
 ### FRONT END To do
-    1. 
+    1. [DONE] Create paginated SQL Injection course.
+    2. [DONE] Improve hint visual side.
+    3. [DONE] Further extend information about SQL Injection course.
+    4. Create login functionality.
 ---
 ### Useful links
 [Lombok package & plugin config](https://www.baeldung.com/lombok-ide) \
@@ -56,6 +59,14 @@ Swagger api is available at [API](http://localhost:8080/swagger-ui.html#/course-
 1. right-click `target` folder or open in terminal `cd ~/IdeaProjects/SecureAppPractices/target$ `
 2. `java -jar SecureAppPractices-0.0.1-SNAPSHOT.jar`
 3. Swagger api is available at [API](http://localhost:8080/swagger-ui.html#/course-controller)
+
+### To run Front
+1. First of all you need to have npm installed. On linux run:
+	curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
+	sudo apt install nodejs
+2. Cd into folder where package.json is.
+3. Run 'npm install'
+4. Run 'npm run serve', if you are using local backend, then run 'npm run serve -- --port 3000' where 3000 can be replaced with any other port except for 8080.
 
 ### How to Github:
 
