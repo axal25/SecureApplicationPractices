@@ -160,7 +160,7 @@
             placeholder="Szukaj kursow po id"
             style="width: 30%"
           />
-          <button class="button is-dark" @click="search" style="margin: 0 5px 0 5px">Szukaj niebezpiecznie</button>
+          <button class="button is-danger" @click="search" style="margin: 0 5px 0 5px">Szukaj niebezpiecznie</button>
           <button class="button is-dark" @click="hint1" style="margin: 0 5px 0 5px">Hint1</button>
           <button class="button is-dark" @click="hint2" style="margin: 0 5px 0 5px">Hint2</button>
           <br />
