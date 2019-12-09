@@ -1,198 +1,369 @@
 <template>
   <div id="sqli">
-    <h2>Czym jest SQL Injection ?</h2>
-    <p>
-      <br />Na początku przytoczę definicję: <br />SQL injection (z ang. <em>wstrzyknięcie</em>) – metoda ataku
-      komputerowego wykorzystująca lukę w zabezpieczeniach aplikacji polegającą na nieodpowiednim filtrowaniu lub
-      niedostatecznym typowaniu danych użytkownika, które to dane są później wykorzystywane przy wykonaniu zapytań (SQL)
-      do bazy danych.
-    </p>
+    <div id="page1" v-show="showFirstPage">
+      <article class="message is-info">
+        <div class="message-header">
+          <p>Czym jest SQL Injection ?</p>
+        </div>
+        <div class="message-body">
+          SQL injection (z ang. <em>wstrzyknięcie</em>) – metoda ataku komputerowego wykorzystująca lukę w
+          zabezpieczeniach aplikacji polegającą na nieodpowiednim filtrowaniu lub niedostatecznym typowaniu danych
+          użytkownika, które to dane są później wykorzystywane przy wykonaniu zapytań (SQL) do bazy danych.
+        </div>
+      </article>
 
-    <h2>Jak się przejawia w kodzie</h2>
+      <article class="message">
+        <div class="message-header">
+          <p>Przykład wrażliwego wykorzystania executeQuery</p>
+        </div>
+        <div class="message-body" aria-readonly="true">
+          public List AccountDTO unsafeFindAccountsByCustomerId(String customerId) throws SQLException { <br />String
+          sql = "select customer_id,acc_number,branch_id,balance from Accounts where customer_id = " + customerId + "'";
+          <br />Connection c = dataSource.getConnection(); <br />ResultSet rs = c.createStatement().executeQuery(sql);
+          <br />}
+        </div>
+      </article>
 
-    <p>Wszystkie przykłady są z Javy, głównie dlatego, że ona służy nam jako backend</p>
+      <article class="message">
+        <div class="message-header">
+          <p>Przykład wrażliwego wykorzystania JPA</p>
+        </div>
+        <div class="message-body" aria-readonly="true">
+          public List AccountDTO unsafeJpaFindAccountsByCustomerId(String customerId) {
+          <br />
+          String jql = "from Account where customerId = '" + customerId + "'"; <br />TypedQuery Account> q =
+          em.createQuery(jql, Account.class); <br />return q.getResultList() .stream() .map(this::toAccountDTO)
+          .collect(Collectors.toList()); <br />}
+        </div>
+      </article>
+    </div>
 
-    <textarea rows="7" cols="100" readonly="true" style="border:solid 2px black; margin: 5px;">
-public List<AccountDTO> unsafeFindAccountsByCustomerId(String customerId) throws SQLException {
-  String sql = "select customer_id,acc_number,branch_id,balance from Accounts where customer_id = " + customerId + "'";
-  Connection c = dataSource.getConnection();
-  ResultSet rs = c.createStatement().executeQuery(sql);
-}
-      </textarea
-    >
+    <div id="page2" v-show="showSecondPage">
+      <h1>Jak temu zapobiec</h1>
 
-    <p>Nawet JPA nie zapewnia zawsze bezpieczeństwa - poniżej przykład wrażliwego dostępu za pomocą JPA.</p>
-
-    <textarea rows="7" cols="100" readonly="true" style="border:solid 2px black; margin: 5px;">
-public List<AccountDTO> unsafeJpaFindAccountsByCustomerId(String customerId) {    
-  String jql = "from Account where customerId = '" + customerId + "'";        
-  TypedQuery Account> q = em.createQuery(jql, Account.class);        
-  return q.getResultList()
-    .stream()
-    .map(this::toAccountDTO)
-    .collect(Collectors.toList());        
-}
-      </textarea
-    >
-
-    <h2>Przyklad</h2>
-    <p>
-      Wyszukiwanie danych. Wyszukiwarki tego typu można znaleźć na wielu stronach, część z nich jest tak samo wrażliwa
-      na atak jak podany przykład. Twoim zadaniem jest usunięcie tabeli za pomoca SQL Injection. Uwaga, operacja jest
-      nieodwracalna i testowe dane powrócą dopiero po ponownym włączeniu backendu. Ponizszy formularz przyjmuje nazwe
-      kursu i w textarea pokazany jest wynik.
-      <br />Tabela do ktorej nalezy dodac kurs nosi nazwe: <b>"unsafe.courses"</b> i kursy mają strukturę:
-      <!-- <br />Tabela do ktorej nalezy dodac kurs nosi nazwe: <b>"unsafe.courses"</b> i kursy mają strukturę: -->
-      <b>{ id: UUID, name: String }</b>
+      <p>
+        Skoro juz wiemy czym sie objawia SQL Injection, to moze kilka sposobow na to jak sie przeciwko temu
+        zabezpieczyc:
+      </p>
       <br />
-      <input v-model="query" type="text" placeholder="Szukaj kursow po nazwie" class="form-control" />
-      <mdb-btn large color="primary" @click.native="searchSafely" style="border:solid 2px black; margin: 5px;"
-        >Szukaj bezpiecznie</mdb-btn
-      >
-      <mdb-btn large color="primary" @click.native="search" style="border:solid 2px black; margin: 5px;"
-        >Szukaj</mdb-btn
-      >
-      <mdb-btn large color="primary" @click.native="hint1" style="border:solid 2px black; margin: 5px;">Hint1</mdb-btn>
-      <mdb-btn large color="primary" @click.native="hint2" style="border:solid 2px black; margin: 5px;">Hint2</mdb-btn>
-      <br />
-      <textarea
-        v-model="posts"
-        rows="7"
-        cols="100"
-        id="result"
-        readonly="true"
-        style="border:solid 2px black; margin: 5px;"
-      ></textarea>
-    </p>
 
-    <h2>Jak temu zapobiec</h2>
+      <article class="message">
+        <div class="message-header">
+          <p>Stosowanie <em>PreparedStatements</em></p>
+        </div>
+        <div class="message-body" aria-readonly="true">
+          public ListAccountDTO safeFindAccountsByCustomerId(String customerId) throws Exception {<br />
+          String sql = "select customer_id, acc_number, branch_id, balance from Accounts where customer_id = ?";<br />
+          Connection c = dataSource.getConnection();<br />
+          PreparedStatement p = c.prepareStatement(sql);<br />
+          p.setString(1, customerId);<br />
+          ResultSet rs = p.executeQuery(sql)); <br />
+          }
+        </div>
+      </article>
 
-    <p>
-      Pierwszym przykładem jak zabezpieczyć dostęp do bazy to: stosowanie
-      <em>prepared statements</em>
-    </p>
+      <article class="message">
+        <div class="message-header">
+          <p>Stosowanie <em>TypedQuery</em> w JPA</p>
+        </div>
+        <div class="message-body" aria-readonly="true">
+          String jql = "from Account where customerId = :customerId";<br />
+          TypedQuery Account> q = em.createQuery(jql, Account.class)<br />
+          .setParameter("customerId", customerId);<br />
+        </div>
+      </article>
 
-    <textarea rows="7" cols="100" readonly="true" style="border:solid 2px black; margin: 5px;">
-public ListAccountDTO> safeFindAccountsByCustomerId(String customerId) throws Exception {
-  String sql = "select customer_id, acc_number, branch_id, balance from Accounts where customer_id = ?";
-  Connection c = dataSource.getConnection();
-  PreparedStatement p = c.prepareStatement(sql);
-  p.setString(1, customerId);
-  ResultSet rs = p.executeQuery(sql)); 
-}
-    </textarea>
+      <article class="message">
+        <div class="message-header">
+          <p>Stosowanie <em>Criteria API</em></p>
+        </div>
+        <div class="message-body" aria-readonly="true">
+          CriteriaBuilder cb = em.getCriteriaBuilder();<br />
+          CriteriaQuery Account cq = cb.createQuery(Account.class);<br />
+          Root Account root = cq.from(Account.class);<br />
+          cq.select(root).where(cb.equal(root.get(Account_.customerId), customerId));<br />
+          TypedQuery Account q = em.createQuery(cq);<br />
+        </div>
+      </article>
+    </div>
 
-    <p>
-      Kolejno w przypadku JPA stosujemy cos w tym stylu
-    </p>
+    <div id="page3" v-show="showThirdPage">
+      <p>
+        Do tego tematu - zabezpieczenia przed SQL Injection mozna podejsc jeszcze od innej strony, czyli walidowac to co
+        zostanie wprowadzone, zanim wykonamy zapytanie do bazy danych.
+      </p><br/>
 
-    <textarea rows="3" cols="100" readonly="true" style="border:solid 2px black; margin: 5px;">
-String jql = "from Account where customerId = :customerId";
-TypedQuery Account> q = em.createQuery(jql, Account.class)
-.setParameter("customerId", customerId);
-    </textarea>
+      <article class="message">
+        <div class="message-header">
+          <p>Przyklad zabezpieczenia inputu</em></p>
+        </div>
+        <div class="message-body" aria-readonly="true">
+          private static final Set String VALID_COLUMNS_FOR_ORDER_BY = Collections.unmodifiableSet(Stream
+          .of("acc_number","branch_id","balance").collect(Collectors.toCollection(HashSet::new)));
+          <br />
+          public List AccountDTO safeFindAccountsByCustomerId( String customerId, String orderBy) throws Exception {
+          <br />
+          String sql = "select " + "customer_id,acc_number,branch_id,balance from Accounts" + "where customer_id = ?
+          ";<br />
+          if (VALID_COLUMNS_FOR_ORDER_BY.contains(orderBy)) {<br />
+          sql = sql + " order by " + orderBy;<br />
+          } else {<br />
+          throw new IllegalArgumentException("Nice try!");<br />
+          }<br />
+          Connection c = dataSource.getConnection();<br />
+          PreparedStatement p = c.prepareStatement(sql);<br />
+          p.setString(1,customerId);<br />
+          }<br />
+        </div>
+      </article>
 
-    <p>
-      Nastepne zastosowanie to uzycie Criteria API - jedno z zagadnien poznanych na SOA.
-    </p>
+      <p>
+        Bardzo często jako walidacje stosuje się np typ UUID jako identyfikator, poniżej znajduje się przykład w którym safeApi ma identyfikator jako UUID.
+      </p>
+      <div>
+          <input
+            class="input is-rounded"
+            v-model="safeId"
+            type="text"
+            placeholder="Podaj id kursu"
+            style="width: 30%"
+          /><br/>
+                    <input
+            class="input is-rounded"
+            v-model="safeName"
+            type="text"
+            placeholder="Podaj nazwe kursu"
+            style="width: 30%"
+          />
+          <button class="button is-dark" @click="safeAdd" style="margin: 0 5px 0 5px">Dodaj do safeApi</button>
+          <textarea v-model="safeAddPosts" rows="7" cols="80" id="result" readonly="true"></textarea>
+        </div>
+    </div>
 
-    <textarea rows="5" cols="100" readonly="true" style="border:solid 2px black; margin: 5px;">
-CriteriaBuilder cb = em.getCriteriaBuilder();
-CriteriaQuery<Account> cq = cb.createQuery(Account.class);
-Root<Account> root = cq.from(Account.class);
-cq.select(root).where(cb.equal(root.get(Account_.customerId), customerId));
-TypedQuery<Account> q = em.createQuery(cq);
-    </textarea>
+    <div id="page4" v-show="showFourthPage">
+      <h1>Przyklad na drop bazy danych</h1>
+      <p>
+        Wyszukiwanie danych. Wyszukiwarki tego typu można znaleźć na wielu stronach, część z nich jest tak samo wrażliwa
+        na atak jak podany przykład. Twoim zadaniem jest usunięcie tabeli za pomoca SQL Injection. Uwaga, operacja jest
+        nieodwracalna i testowe dane powrócą dopiero po ponownym włączeniu backendu. Ponizszy formularz przyjmuje nazwe
+        kursu i w textarea pokazany jest wynik.
+        <br />Tabela na ktorej operujemy nosi nazwe: <b>"unsafe.courses"</b> i kursy mają strukturę:
+        <b>{ id: UUID, name: String }</b>
+        <br />
+      </p>
+      <div class="row">
+        <div class="column">
+          <input
+            class="input is-rounded"
+            v-model="unsafeQuery"
+            type="text"
+            placeholder="Szukaj kursow po id"
+            style="width: 30%"
+          />
+          <button class="button is-dark" @click="search" style="margin: 0 5px 0 5px">Szukaj niebezpiecznie</button>
+          <button class="button is-dark" @click="hint1" style="margin: 0 5px 0 5px">Hint1</button>
+          <button class="button is-dark" @click="hint2" style="margin: 0 5px 0 5px">Hint2</button>
+          <br />
+          <textarea v-model="unsafePosts" rows="7" cols="80" id="result" readonly="true"></textarea>
+        </div>
 
-    <p>
-      Do tego tematu - zabezpieczenia przed SQL Injection mozna podejsc jeszcze od innej strony, czyli walidowac to co
-      zostanie wprowadzone, zanim wykonamy zapytanie do bazy danych.
-    </p>
+        <div class="column">
+          <input
+            class="input is-rounded"
+            v-model="safeQuery"
+            type="text"
+            placeholder="Szukaj kursow po id"
+            style="width: 30%"
+          />
+          <button class="button is-dark" @click="searchSafely" style="margin: 0 5px 0 5px">
+            Szukaj bezpiecznie
+          </button>
+          <br />
+          <textarea v-model="safePosts" rows="7" cols="80" id="result" readonly="true"></textarea>
+        </div>
+      </div>
 
-    <textarea rows="7" cols="100" readonly="true" style="border:solid 2px black; margin: 5px;">
-private static final Set<String> VALID_COLUMNS_FOR_ORDER_BY
-  = Collections.unmodifiableSet(Stream
-      .of("acc_number","branch_id","balance")
-      .collect(Collectors.toCollection(HashSet::new)));
- 
-public List<AccountDTO> safeFindAccountsByCustomerId(
-  String customerId,
-  String orderBy) throws Exception { 
-    String sql = "select "
-      + "customer_id,acc_number,branch_id,balance from Accounts"
-      + "where customer_id = ? ";
-    if (VALID_COLUMNS_FOR_ORDER_BY.contains(orderBy)) {
-        sql = sql + " order by " + orderBy;
-    } else {
-        throw new IllegalArgumentException("Nice try!");
-    }
-    Connection c = dataSource.getConnection();
-    PreparedStatement p = c.prepareStatement(sql);
-    p.setString(1,customerId);
-    // ... result set processing omitted
-}
-    </textarea>
+      <p>
+        W tym przypadku chcąc zachować jednakową implementację safe i unsafe Api - udalo sie to zabezpieczyc poprzez ograniczenie user permission. 
+        W przypadku unsafeApi uzytkownik moze doslownie wszystko na bazie danych, natomiast w przypadku safeApi uzytkownik ma mocno ograniczone pole manewru - 
+        nie moze modyfikowac tabel itp.
+      </p>
+
+      <div class="modal is-active" v-show="activateHint1">
+        <div class="modal-background"></div>
+        <div class="modal-card">
+          <header class="modal-card-head">
+            <p class="modal-card-title">Hint 1</p>
+            <button class="delete" aria-label="close" @click="activateHint1 = false"></button>
+          </header>
+          <section class="modal-card-body">
+            W SQLu usuwanie tabeli wykonuje sie poprzez klauzule DROP TABLE {tableName}, kończenie jednej komendy
+            następuje po znaku ';'
+          </section>
+          <footer class="modal-card-foot"></footer>
+        </div>
+      </div>
+
+      <div class="modal is-active" v-show="activateHint2">
+        <div class="modal-background"></div>
+        <div class="modal-card">
+          <header class="modal-card-head">
+            <p class="modal-card-title">Hint 2</p>
+            <button class="delete" aria-label="close" @click="activateHint2 = false"></button>
+          </header>
+          <section class="modal-card-body">
+            Wklej jako query: 'id; DROP TABLE unsafe.courses;'
+          </section>
+          <footer class="modal-card-foot"></footer>
+        </div>
+      </div>
+    </div>
+
+    <nav class="pagination is-centered" role="navigation" aria-label="pagination">
+      <ul class="pagination-list">
+        <li>
+          <button class="pagination-link" @click="showFirstPageAction">1</button>
+        </li>
+        <li>
+          <button class="pagination-link" @click="showSecondPageAction">2</button>
+        </li>
+        <li>
+          <button class="pagination-link" @click="showThirdPageAction">3</button>
+        </li>
+        <li>
+          <button class="pagination-link" @click="showFourthPageAction">4</button>
+        </li>
+      </ul>
+    </nav>
   </div>
 </template>
 
 <script>
 import Material from "vuetify/es5/util/colors"
-import { mdbBtn } from "mdbvue"
 
 export default {
-  components: { mdbBtn },
+  components: {},
   data: () => ({
     color: Material,
-    posts: null,
-    query: null,
-    active: false
+    safePosts: null,
+    unsafePosts: null,
+
+    unsafeQuery: null,
+    safeQuery: null,
+
+    active: false,
+    activateHint1: false,
+    activateHint2: false,
+
+    showFirstPage: true,
+    showSecondPage: false,
+    showThirdPage: false,
+    showFourthPage: false,
+    showFifthPage: false,
+
+    safeId: null,
+    safeName: null,
+    safeAddPosts: null,
+        
   }),
   methods: {
+    safeAdd() {
+      axios
+        .post(
+          "http://localhost:8080/unSecureApi/courses", { id: this.safeId, name: this.safeName }
+        )
+        .then(response => {
+          this.safeAddPosts = response.data
+        })
+    },
     search() {
       axios
         .get(
-          "http://localhost:8080/UnSecureApi/courses/query2?query=SELECT * FROM unsafe.courses WHERE name=" + this.query
+          "http://localhost:8080/unSecureApi/courses/runQueryGetsResultsFromDatabase?query=SELECT * FROM unsafe.courses WHERE id=" +
+            this.unsafeQuery
         )
         .then(response => {
-          this.posts = response.data
+          this.unsafePosts = response.data
         })
+    },
+    showFirstPageAction() {
+      ;(this.showFirstPage = true),
+        (this.showSecondPage = false),
+        (this.showThirdPage = false),
+        (this.showFourthPage = false),
+        (this.showFifthPage = false)
+    },
+    showSecondPageAction() {
+      ;(this.showFirstPage = false),
+        (this.showSecondPage = true),
+        (this.showThirdPage = false),
+        (this.showFourthPage = false),
+        (this.showFifthPage = false)
+    },
+    showThirdPageAction() {
+      ;(this.showFirstPage = false),
+        (this.showSecondPage = false),
+        (this.showThirdPage = true),
+        (this.showFourthPage = false),
+        (this.showFifthPage = false)
+    },
+    showFourthPageAction() {
+      ;(this.showFirstPage = false),
+        (this.showSecondPage = false),
+        (this.showThirdPage = false),
+        (this.showFourthPage = true),
+        (this.showFifthPage = false)
+    },
+    showFifthPageAction() {
+      ;(this.showFirstPage = false),
+        (this.showSecondPage = false),
+        (this.showThirdPage = false),
+        (this.showFourthPage = false),
+        (this.showFifthPage = true)
     },
     searchSafely() {
       axios
-        .get("http://localhost:8080/api/courses/query2?query=SELECT * FROM unsafe.courses WHERE name=" + this.query)
+        .get(
+          "http://localhost:8080/secureApi/courses/runQueryGetsResultsFromDatabase?query=SELECT * FROM safe.courses WHERE id=" +
+            this.safeQuery
+        )
         .then(response => {
-          this.posts = response.data
+          this.safePosts = response.data
         })
     },
     hint1() {
-      // alert(
-      //   "W SQLu dodawanie do tablicy wykonuje się poprzez klauzulę INSERT INTO {database_name}(dane1,dane2), kończenie jednej komendy następuje po znaku ';'"
-      // )
-      alert(
-        "W SQLu usuwanie tabeli wykonuje sie poprzez klauzule DROP TABLE {tableName}, kończenie jednej komendy następuje po znaku ';'"
-      )
+      this.activateHint1 = "true"
     },
     hint2() {
-      // alert("Wklej jako query: 'name; INSERT INTO unsafe.courses(d7e895a9,dup);'")
-      alert("Wklej jako query: 'name; DROP TABLE unsafe.courses;'")
+      this.activateHint2 = "true"
     }
   }
 }
 </script>
 
 <style scoped lang="css">
-#sqli {
-  color: blue;
-  text-shadow: rgba(61, 61, 61, 0.3) 1px 1px, rgba(61, 61, 61, 0.2) 2px 2px;
+.row {
+  display: flex;
 }
 
-#h2 {
-  color: blueviolet;
-  font-weight: bolder;
+.column {
+  flex: 50%;
 }
 
-#h3 {
-  color: blueviolet;
-  font-weight: bolder;
+textarea {
+  width: 100%;
+  height: 150px;
+  padding: 12px 20px;
+  box-sizing: border-box;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  background-color: #f8f8f8;
+  resize: none;
+  margin-top: 5px;
+}
+
+h1 {
+  font-size: 24px;
+  font-weight: bold;
 }
 </style>

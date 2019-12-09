@@ -78,14 +78,4 @@ body {
   color: #2c3e50;
   margin: 40px 40px 40px 40px;
 }
-
-h1 {
-  color: rgb(24, 12, 129);
-  font-weight: 700;
-}
-
-h2 {
-  color: blueviolet;
-  font-weight: 400;
-}
 </style>

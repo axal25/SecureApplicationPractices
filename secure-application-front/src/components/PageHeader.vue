@@ -1,7 +1,7 @@
 <template>
   <v-layout row class="app--page-header">
     <div class="page-header-left">
-      <h1 class="pr-3">{{ $route.meta.title || "" }}</h1>
+      <!-- <h1 class="pr-3">{{ $route.meta.title || "" }}</h1> -->
     </div>
     <!-- <v-breadcrumbs divider="-" :items="breadcrumbs">
         <template v-slot:item="props">
