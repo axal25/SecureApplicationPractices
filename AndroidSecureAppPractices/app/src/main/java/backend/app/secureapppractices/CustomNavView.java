@@ -12,6 +12,7 @@ import com.google.android.material.navigation.NavigationView;
 
 import backend.app.secureapppractices.ui.main.courses.CourseFragmentConstructor;
 import backend.app.secureapppractices.ui.main.courses.HomeFragment;
+import backend.app.secureapppractices.ui.main.courses.comments.CommentsFragment;
 import backend.app.secureapppractices.ui.main.courses.practical.CoursePractical1;
 import backend.app.secureapppractices.ui.main.courses.practical.CoursePractical2;
 import backend.app.secureapppractices.ui.main.courses.theoretical.CourseTheoretical1;
@@ -24,14 +25,16 @@ interface CustomNavView extends NavigationView.OnNavigationItemSelectedListener 
             CourseTheoretical1::new,
             CoursePractical1::new,
             CourseTheoretical2::new,
-            CoursePractical2::new
+            CoursePractical2::new,
+            CommentsFragment::new
     };
     public static final int[] courseFragmentNavElementIds = {
             R.id.nav_course_home,
             R.id.nav_course_theoretical,
             R.id.nav_course_practical,
             R.id.nav_course_1,
-            R.id.nav_course_2
+            R.id.nav_course_2,
+            R.id.nav_comments
     };
     public static final int[] navViewGroupIds = {
             R.id.group_type,

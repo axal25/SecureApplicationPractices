@@ -9,7 +9,13 @@
         android:icon="@drawable/ic_home"
         android:title="Home" />
 
-    <item android:title="Course type">
+    <item
+        android:id="@+id/nav_comments"
+        android:checkable="true"
+        android:icon="@drawable/comment_multiple_outline"
+        android:title="@string/comments_nav_name" />
+
+    <item android:title="@string/course_type_nav_name">
         <menu>
             <group android:id="@+id/group_type">
                 <item
