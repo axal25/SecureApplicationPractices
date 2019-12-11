@@ -1,53 +1,29 @@
 package backend.app.secureapppractices;
 
 import android.os.Bundle;
-import android.view.MenuItem;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.Fragment;
 
 import com.google.android.material.navigation.NavigationView;
 
-import backend.app.secureapppractices.ui.main.courses.CourseFragmentConstructor;
-import backend.app.secureapppractices.ui.main.courses.HomeFragment;
-import backend.app.secureapppractices.ui.main.courses.practical.CoursePractical1;
-import backend.app.secureapppractices.ui.main.courses.practical.CoursePractical2;
-import backend.app.secureapppractices.ui.main.courses.theoretical.CourseTheoretical1;
-import backend.app.secureapppractices.ui.main.courses.theoretical.CourseTheoretical2;
-
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements CustomNavView {
     private DrawerLayout drawerLayout;
+    private NavigationView navigationView;
     private Toolbar toolbar;
     private ActionBarDrawerToggle actionBarDrawerToggle;
-    private NavigationView navigationView;
+    public int[] currentlySelectedNavViewItemIds = {-1,-1,-1};
 
-    private static final CourseFragmentConstructor[] courseFragmentConstructors = new CourseFragmentConstructor[]{
-            HomeFragment::new,
-            CourseTheoretical1::new,
-            CoursePractical1::new,
-            CourseTheoretical2::new,
-            CoursePractical2::new
-    };
-    private static final int[] courseFragmentNavElementIds = {
-            R.id.nav_course_home,
-            R.id.nav_course_theoretical,
-            R.id.nav_course_practical,
-            R.id.nav_course_1,
-            R.id.nav_course_2
-    };
-    private static final int[] navViewGroupIds = {
-            R.id.group_type,
-            R.id.group_number
-    };
-    private int[] currentlySelectedNavViewItemIds = {-1,-1,-1};
+    public MainActivity() {
+        System.out.println("MainActivity() Constructor");
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        System.out.println("OnCreate");
         super.onCreate(savedInstanceState);
         init();
         ifNewlyOpenedApp(savedInstanceState);
@@ -57,105 +33,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void onBackPressed() {
         if(this.drawerLayout.isDrawerOpen(GravityCompat.START)) this.drawerLayout.closeDrawer(GravityCompat.START);
         else super.onBackPressed();
-    }
-
-    private boolean isFullyChosen() {
-        if(
-                this.currentlySelectedNavViewItemIds[2]!=-1 ||
-                (
-                        this.currentlySelectedNavViewItemIds[0]!=-1 &&
-                        this.currentlySelectedNavViewItemIds[1]!=-1
-                )
-        ) return true;
-        else return false;
-    }
-
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem pressedMenuItem) {
-        setItemCheckedAndUncheckPreviousItemFromSameGroup(pressedMenuItem);
-        changeCourseFragmentIfFullyChosen();
-        closeDrawerIfFullyChosen();
-        return false;
-    }
-
-    private void closeDrawerIfFullyChosen() {
-        if(isFullyChosen()) this.drawerLayout.closeDrawer(GravityCompat.START);
-    }
-
-    private void setItemCheckedAndUncheckPreviousItemFromSameGroup(@NonNull MenuItem pressedMenuItem) {
-        int groupNumber = getGroupNumber(pressedMenuItem);
-        if( isCorrectGroupNumber(groupNumber) ) {
-            if( isHomeGroupNumber(groupNumber) ) uncheckAllMenuItems();
-            else uncheckPreviousItemFromSameGroup( groupNumber );
-            this.currentlySelectedNavViewItemIds[groupNumber] = pressedMenuItem.getItemId();
-            pressedMenuItem.setChecked(true);
-        }
-    }
-
-    private boolean isCorrectGroupNumber(int groupNumber) {
-        if( groupNumber != -1 && groupNumber >= 0 && groupNumber <= 2 ) return true;
-        else return false;
-    }
-
-    private boolean isHomeGroupNumber(int groupNumber) {
-        if(groupNumber==2) return true;
-        else return false;
-    }
-
-    private void uncheckAllMenuItems() {
-        for (int i = 0; i < this.currentlySelectedNavViewItemIds.length; i++) {
-            safeUncheckItem(this.currentlySelectedNavViewItemIds[i]);
-            this.currentlySelectedNavViewItemIds[i] = -1;
-        }
-    }
-
-    private void uncheckPreviousItemFromSameGroup(int groupNumber) {
-        safeUncheckItem(this.currentlySelectedNavViewItemIds[groupNumber]);
-        this.currentlySelectedNavViewItemIds[groupNumber] = -1;
-        uncheckHomeIfChecked();
-    }
-
-    private void uncheckHomeIfChecked() {
-        safeUncheckItem(this.currentlySelectedNavViewItemIds[2]);
-        this.currentlySelectedNavViewItemIds[2] = -1;
-    }
-
-    private void safeUncheckItem(int menuItemId) {
-        if(menuItemId!=-1) {
-            MenuItem prevSelectedMenuItem = this.navigationView.getMenu().findItem(menuItemId);
-            prevSelectedMenuItem.setChecked(false);
-        }
-    }
-
-    private int getGroupNumber(@NonNull MenuItem pressedMenuItem) {
-        if(pressedMenuItem.getGroupId() == navViewGroupIds[0]) return 0;
-        else if(pressedMenuItem.getGroupId() == navViewGroupIds[1]) return 1;
-        else if(pressedMenuItem.getItemId() == courseFragmentNavElementIds[0]) return 2;
-        else return -1;
-    }
-
-    private void changeCourseFragmentIfFullyChosen() {
-        if(isFullyChosen()) {
-            if(this.currentlySelectedNavViewItemIds[2]!=-1) openNewFragment(courseFragmentConstructors[0].getNewCourseFragment());
-            else {
-                if(this.currentlySelectedNavViewItemIds[0]==courseFragmentNavElementIds[1]) {
-                    if(this.currentlySelectedNavViewItemIds[1]==courseFragmentNavElementIds[3])
-                        openNewFragment(courseFragmentConstructors[1].getNewCourseFragment());
-                    if(this.currentlySelectedNavViewItemIds[1]==courseFragmentNavElementIds[4])
-                        openNewFragment(courseFragmentConstructors[3].getNewCourseFragment());
-                }
-                else if(this.currentlySelectedNavViewItemIds[0]==courseFragmentNavElementIds[2]) {
-                    if(this.currentlySelectedNavViewItemIds[1]==courseFragmentNavElementIds[3])
-                        openNewFragment(courseFragmentConstructors[2].getNewCourseFragment());
-                    else if(this.currentlySelectedNavViewItemIds[1]==courseFragmentNavElementIds[4])
-                        openNewFragment(courseFragmentConstructors[4].getNewCourseFragment());
-                }
-            }
-        }
-    }
-
-    private void openNewFragment(Fragment fragmentInstance) {
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragmentInstance).commit();
     }
 
     private void init() {
@@ -197,13 +74,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void ifNewlyOpenedApp(Bundle savedInstanceState) {
         if(savedInstanceState == null) {
-            mockClickHomeFragment();
+            try {
+                mockClickHomeFragment();
+            }
+            catch(Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
-    private void mockClickHomeFragment() {
-        openNewFragment(courseFragmentConstructors[0].getNewCourseFragment());
-        this.navigationView.setCheckedItem(courseFragmentNavElementIds[0]);
-        this.currentlySelectedNavViewItemIds[2] = courseFragmentNavElementIds[0];
+    @Override
+    public DrawerLayout getDrawerLayout() throws Exception {
+        if(this.drawerLayout == null) throw new Exception("this.drawerLayout == null");
+        return this.drawerLayout;
+    }
+
+    @Override
+    public NavigationView getNavigationView() throws Exception {
+        if(this.navigationView == null) throw new Exception("this.navigationView == null");
+        return this.navigationView;
+    }
+
+    @Override
+    public int[] getCurrentlySelectedNavViewItemIds() throws Exception {
+        if(this.currentlySelectedNavViewItemIds == null) throw new Exception("this.navigationView == null");
+        return this.currentlySelectedNavViewItemIds;
     }
 }
