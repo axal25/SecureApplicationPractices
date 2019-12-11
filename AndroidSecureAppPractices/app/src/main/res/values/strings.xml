@@ -26,4 +26,12 @@
     <string name="text_input_edit_text_query2">Query place holder 2</string>
     <string name="edit_text_result_1">Place holder for response 1</string>
     <string name="edit_text_result_2">Place holder for response 2</string>
+    <string name="comments_nav_name">Comments</string>
+    <string name="home_nav_name">Home</string>
+    <string name="course_type_nav_name">Course type</string>
+    <string name="theoretical_nav_name">Theoretical</string>
+    <string name="practical_nav_name">Practical</string>
+    <string name="course_number_nav_name">Course number</string>
+    <string name="course_1_nav_name">Course 1</string>
+    <string name="course_2_nav_name">Course 2</string>
 </resources>

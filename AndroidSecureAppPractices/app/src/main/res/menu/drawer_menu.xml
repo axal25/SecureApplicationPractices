@@ -7,7 +7,7 @@
         android:id="@+id/nav_course_home"
         android:checkable="true"
         android:icon="@drawable/ic_home"
-        android:title="Home" />
+        android:title="@string/home_nav_name" />
 
     <item
         android:id="@+id/nav_comments"
@@ -22,29 +22,29 @@
                     android:id="@+id/nav_course_theoretical"
                     android:checkable="true"
                     android:icon="@drawable/ic_course_theoretical"
-                    android:title="Theoretical" />
+                    android:title="@string/theoretical_nav_name" />
                 <item
                     android:id="@+id/nav_course_practical"
                     android:checkable="true"
                     android:icon="@drawable/ic_course_practical"
-                    android:title="Practical" />
+                    android:title="@string/practical_nav_name" />
             </group>
         </menu>
     </item>
 
-    <item android:title="Course number">
+    <item android:title="@string/course_number_nav_name">
         <menu>
             <group android:id="@+id/group_number">
                 <item
                     android:id="@+id/nav_course_1"
                     android:checkable="true"
                     android:icon="@drawable/ic_course_1"
-                    android:title="Course 1" />
+                    android:title="@string/course_1_nav_name" />
                 <item
                     android:id="@+id/nav_course_2"
                     android:checkable="true"
                     android:icon="@drawable/ic_course_2"
-                    android:title="Course 2" />
+                    android:title="@string/course_2_nav_name" />
             </group>
         </menu>
     </item>
