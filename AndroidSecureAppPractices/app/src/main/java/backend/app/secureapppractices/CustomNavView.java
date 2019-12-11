@@ -66,6 +66,10 @@ interface CustomNavView extends NavigationView.OnNavigationItemSelectedListener 
             else uncheckPreviousItemFromSameGroup( groupNumber );
             this.getCurrentlySelectedNavViewItemIds()[groupNumber] = pressedMenuItem.getItemId();
             pressedMenuItem.setChecked(true);
+        } else {
+            uncheckAllMenuItems();
+            this.getCurrentlySelectedNavViewItemIds()[groupNumber] = pressedMenuItem.getItemId();
+            pressedMenuItem.setChecked(true);
         }
     }
 
