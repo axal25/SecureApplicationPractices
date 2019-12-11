@@ -18,7 +18,7 @@ import backend.app.secureapppractices.ui.main.courses.practical.CoursePractical2
 import backend.app.secureapppractices.ui.main.courses.theoretical.CourseTheoretical1;
 import backend.app.secureapppractices.ui.main.courses.theoretical.CourseTheoretical2;
 
-interface CustomNavView extends NavigationView.OnNavigationItemSelectedListener  {
+interface CustomNavView extends NavigationView.OnNavigationItemSelectedListener {
 
     public static final CourseFragmentConstructor[] courseFragmentConstructors = new CourseFragmentConstructor[]{
             HomeFragment::new,
@@ -28,6 +28,7 @@ interface CustomNavView extends NavigationView.OnNavigationItemSelectedListener 
             CoursePractical2::new,
             CommentsFragment::new
     };
+
     public static final int[] courseFragmentNavElementIds = {
             R.id.nav_course_home,
             R.id.nav_course_theoretical,
@@ -36,14 +37,18 @@ interface CustomNavView extends NavigationView.OnNavigationItemSelectedListener 
             R.id.nav_course_2,
             R.id.nav_comments
     };
+
     public static final int[] navViewGroupIds = {
             R.id.group_type,
             R.id.group_number
     };
 
     public DrawerLayout getDrawerLayout() throws Exception;
+
     public NavigationView getNavigationView() throws Exception;
+
     public FragmentManager getSupportFragmentManager();
+
     public int[] getCurrentlySelectedNavViewItemIds() throws Exception;
 
     @Override
@@ -52,8 +57,7 @@ interface CustomNavView extends NavigationView.OnNavigationItemSelectedListener 
             setItemCheckedAndUncheckPreviousItemFromSameGroup(pressedMenuItem);
             changeCourseFragmentIfFullyChosen();
             closeDrawerIfFullyChosen();
-        }
-        catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return false;
@@ -61,32 +65,33 @@ interface CustomNavView extends NavigationView.OnNavigationItemSelectedListener 
 
     default public void setItemCheckedAndUncheckPreviousItemFromSameGroup(@NonNull MenuItem pressedMenuItem) throws Exception {
         int groupNumber = getGroupNumber(pressedMenuItem);
-        if( isCorrectGroupNumber(groupNumber) ) {
-            if( isHomeGroupNumber(groupNumber) ) uncheckAllMenuItems();
-            else uncheckPreviousItemFromSameGroup( groupNumber );
-            this.getCurrentlySelectedNavViewItemIds()[groupNumber] = pressedMenuItem.getItemId();
-            pressedMenuItem.setChecked(true);
-        } else {
-            uncheckAllMenuItems();
+        if (isCorrectGroupNumber(groupNumber)) {
+            if (isHomeGroupNumber(groupNumber) || isCommentsGroupNumber(groupNumber)) {
+                uncheckAllMenuItems();
+            } else {
+                uncheckPreviousItemFromSameGroup(groupNumber);
+            };
             this.getCurrentlySelectedNavViewItemIds()[groupNumber] = pressedMenuItem.getItemId();
             pressedMenuItem.setChecked(true);
         }
     }
 
     default public void changeCourseFragmentIfFullyChosen() throws Exception {
-        if(isFullyChosen()) {
-            if(this.getCurrentlySelectedNavViewItemIds()[2]!=-1) openNewFragment(courseFragmentConstructors[0].getNewCourseFragment());
-            else {
-                if(this.getCurrentlySelectedNavViewItemIds()[0]==courseFragmentNavElementIds[1]) {
-                    if(this.getCurrentlySelectedNavViewItemIds()[1]==courseFragmentNavElementIds[3])
+        if (isFullyChosen()) {
+            if (this.getCurrentlySelectedNavViewItemIds()[2] != -1) {
+                openNewFragment(courseFragmentConstructors[0].getNewCourseFragment());
+            } else if (this.getCurrentlySelectedNavViewItemIds()[3] != -1) {
+                openNewFragment(courseFragmentConstructors[5].getNewCourseFragment());
+            } else {
+                if (this.getCurrentlySelectedNavViewItemIds()[0] == courseFragmentNavElementIds[1]) {
+                    if (this.getCurrentlySelectedNavViewItemIds()[1] == courseFragmentNavElementIds[3])
                         openNewFragment(courseFragmentConstructors[1].getNewCourseFragment());
-                    if(this.getCurrentlySelectedNavViewItemIds()[1]==courseFragmentNavElementIds[4])
+                    if (this.getCurrentlySelectedNavViewItemIds()[1] == courseFragmentNavElementIds[4])
                         openNewFragment(courseFragmentConstructors[3].getNewCourseFragment());
-                }
-                else if(this.getCurrentlySelectedNavViewItemIds()[0]==courseFragmentNavElementIds[2]) {
-                    if(this.getCurrentlySelectedNavViewItemIds()[1]==courseFragmentNavElementIds[3])
+                } else if (this.getCurrentlySelectedNavViewItemIds()[0] == courseFragmentNavElementIds[2]) {
+                    if (this.getCurrentlySelectedNavViewItemIds()[1] == courseFragmentNavElementIds[3])
                         openNewFragment(courseFragmentConstructors[2].getNewCourseFragment());
-                    else if(this.getCurrentlySelectedNavViewItemIds()[1]==courseFragmentNavElementIds[4])
+                    else if (this.getCurrentlySelectedNavViewItemIds()[1] == courseFragmentNavElementIds[4])
                         openNewFragment(courseFragmentConstructors[4].getNewCourseFragment());
                 }
             }
@@ -94,15 +99,15 @@ interface CustomNavView extends NavigationView.OnNavigationItemSelectedListener 
     }
 
     default public void closeDrawerIfFullyChosen() throws Exception {
-        if(isFullyChosen()) this.getDrawerLayout().closeDrawer(GravityCompat.START);
+        if (isFullyChosen()) this.getDrawerLayout().closeDrawer(GravityCompat.START);
     }
 
     default public boolean isFullyChosen() throws Exception {
-        if(
-                this.getCurrentlySelectedNavViewItemIds()[2]!=-1 ||
+        if (
+                this.getCurrentlySelectedNavViewItemIds()[2] != -1 || this.getCurrentlySelectedNavViewItemIds()[3] != -1 ||
                         (
-                                this.getCurrentlySelectedNavViewItemIds()[0]!=-1 &&
-                                this.getCurrentlySelectedNavViewItemIds()[1]!=-1
+                                this.getCurrentlySelectedNavViewItemIds()[0] != -1 &&
+                                        this.getCurrentlySelectedNavViewItemIds()[1] != -1
                         )
         ) {
             return true;
@@ -110,19 +115,25 @@ interface CustomNavView extends NavigationView.OnNavigationItemSelectedListener 
     }
 
     default public int getGroupNumber(@NonNull MenuItem pressedMenuItem) {
-        if(pressedMenuItem.getGroupId() == navViewGroupIds[0]) return 0;
-        else if(pressedMenuItem.getGroupId() == navViewGroupIds[1]) return 1;
-        else if(pressedMenuItem.getItemId() == courseFragmentNavElementIds[0]) return 2;
+        if (pressedMenuItem.getGroupId() == navViewGroupIds[0]) return 0;
+        else if (pressedMenuItem.getGroupId() == navViewGroupIds[1]) return 1;
+        else if (pressedMenuItem.getItemId() == courseFragmentNavElementIds[0]) return 2;
+        else if (pressedMenuItem.getItemId() == courseFragmentNavElementIds[5]) return 3;
         else return -1;
     }
 
     default public boolean isCorrectGroupNumber(int groupNumber) {
-        if( groupNumber != -1 && groupNumber >= 0 && groupNumber <= 2 ) return true;
+        if (groupNumber != -1 && groupNumber >= 0 && groupNumber <= 3) return true;
         else return false;
     }
 
     default public boolean isHomeGroupNumber(int groupNumber) {
-        if(groupNumber==2) return true;
+        if (groupNumber == 2) return true;
+        else return false;
+    }
+
+    default public boolean isCommentsGroupNumber(int groupNumber) {
+        if (groupNumber == 3) return true;
         else return false;
     }
 
@@ -137,10 +148,11 @@ interface CustomNavView extends NavigationView.OnNavigationItemSelectedListener 
         safeUncheckItem(this.getCurrentlySelectedNavViewItemIds()[groupNumber]);
         this.getCurrentlySelectedNavViewItemIds()[groupNumber] = -1;
         uncheckHomeIfChecked();
+        uncheckCommentsIfChecked();
     }
 
     default public void safeUncheckItem(int menuItemId) throws Exception {
-        if(menuItemId!=-1) {
+        if (menuItemId != -1) {
             MenuItem prevSelectedMenuItem = this.getNavigationView().getMenu().findItem(menuItemId);
             prevSelectedMenuItem.setChecked(false);
         }
@@ -149,6 +161,11 @@ interface CustomNavView extends NavigationView.OnNavigationItemSelectedListener 
     default public void uncheckHomeIfChecked() throws Exception {
         safeUncheckItem(this.getCurrentlySelectedNavViewItemIds()[2]);
         this.getCurrentlySelectedNavViewItemIds()[2] = -1;
+    }
+
+    default public void uncheckCommentsIfChecked() throws Exception {
+        safeUncheckItem(this.getCurrentlySelectedNavViewItemIds()[3]);
+        this.getCurrentlySelectedNavViewItemIds()[3] = -1;
     }
 
     default public void openNewFragment(Fragment fragmentInstance) {

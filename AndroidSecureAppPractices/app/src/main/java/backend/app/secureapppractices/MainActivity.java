@@ -15,7 +15,7 @@ public class MainActivity extends AppCompatActivity implements CustomNavView {
     private NavigationView navigationView;
     private Toolbar toolbar;
     private ActionBarDrawerToggle actionBarDrawerToggle;
-    public int[] currentlySelectedNavViewItemIds = {-1,-1,-1};
+    public int[] currentlySelectedNavViewItemIds = {-1,-1,-1,-1};
 
     public MainActivity() {
         System.out.println("MainActivity() Constructor");
