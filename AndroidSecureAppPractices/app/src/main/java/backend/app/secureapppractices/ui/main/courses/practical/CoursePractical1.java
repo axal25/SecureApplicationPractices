@@ -290,17 +290,14 @@ public class CoursePractical1 extends PracticalCourseFragment {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     private String makeSyncRequestOnSeperateThread(String stringUrl) {
         final String[] responseString = new String[1];
         final CountDownLatch latch = new CountDownLatch(1);
-        Thread thread = new Thread() {
-            @RequiresApi(api = Build.VERSION_CODES.N)
-            @Override
-            public void run() {
-                responseString[0] = makeSyncRequest(stringUrl);
-                latch.countDown();
-            }
-        };
+        Thread thread = new Thread(() -> {
+            responseString[0] = makeSyncRequest(stringUrl);
+            latch.countDown();
+        });
         thread.start();
         try {
             latch.await();
