@@ -1,5 +1,6 @@
 package backend.app.secureapppractices.ui.main.courses.comments;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,9 +28,14 @@ public class CommentsFragment extends Fragment implements AdapterView.OnItemClic
     private Button mButton;
     private EditText mEditCommentator;
     private EditText mEditComment;
+    private LayoutInflater inflater;
+    private View view;
+    private ViewGroup container;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_comments, container, false);
+        this.inflater = inflater;
+        this.container = container;
+        view = inflater.inflate(R.layout.fragment_comments, container, false);
         ListView listView = view.findViewById(R.id.lv_comment);
         dao = new CommentsDao(getContext());
         updateListView(listView);
@@ -55,6 +61,18 @@ public class CommentsFragment extends Fragment implements AdapterView.OnItemClic
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Toast.makeText(getActivity(), "Item: " + position, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        // Checks the orientation of the screen
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            view = inflater.inflate(R.layout.fragment_comments_landscape, container, false);
+        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
+            view = inflater.inflate(R.layout.fragment_comments, container, false);
+        }
     }
 
 }

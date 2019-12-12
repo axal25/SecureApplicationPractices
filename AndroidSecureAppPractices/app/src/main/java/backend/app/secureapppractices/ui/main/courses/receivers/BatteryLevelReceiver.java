@@ -19,11 +19,11 @@ public class BatteryLevelReceiver extends BroadcastReceiver {
         scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
         temp = intent.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, -1);
         voltage = intent.getIntExtra(BatteryManager.EXTRA_VOLTAGE, -1);
-        Toast.makeText(context, "Battery low, please do something with this...", Toast.LENGTH_LONG).show();
-        Toast.makeText(context, "Current level: " + level, Toast.LENGTH_LONG).show();
-        Toast.makeText(context, "Current scale: " + scale, Toast.LENGTH_LONG).show();
-        Toast.makeText(context, "Current temp: " + temp, Toast.LENGTH_LONG).show();
-        Toast.makeText(context, "Current voltage: " + voltage, Toast.LENGTH_LONG).show();
+//        Toast.makeText(context, "Battery low, please do something with this...", Toast.LENGTH_LONG).show();
+        Toast.makeText(context, "Current battery level: " + level, Toast.LENGTH_LONG).show();
+//        Toast.makeText(context, "Current scale: " + scale, Toast.LENGTH_LONG).show();
+//        Toast.makeText(context, "Current temp: " + temp, Toast.LENGTH_LONG).show();
+//        Toast.makeText(context, "Current voltage: " + voltage, Toast.LENGTH_LONG).show();
     }
 
 }

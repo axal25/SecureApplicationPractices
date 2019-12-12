@@ -1,6 +1,5 @@
 package backend.app.secureapppractices;
 
-import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 
@@ -19,7 +18,7 @@ public class MainActivity extends AppCompatActivity implements CustomNavView {
     private NavigationView navigationView;
     private Toolbar toolbar;
     private ActionBarDrawerToggle actionBarDrawerToggle;
-    public int[] currentlySelectedNavViewItemIds = {-1,-1,-1,-1};
+    public int[] currentlySelectedNavViewItemIds = {-1, -1, -1, -1};
 
     private BatteryLevelReceiver batteryLevelReceiver;
 
@@ -35,13 +34,13 @@ public class MainActivity extends AppCompatActivity implements CustomNavView {
         ifNewlyOpenedApp(savedInstanceState);
 
         batteryLevelReceiver = new BatteryLevelReceiver();
-        registerReceiver(batteryLevelReceiver, new IntentFilter(
-                Intent.ACTION_BATTERY_CHANGED));
+        registerReceiver(batteryLevelReceiver, new IntentFilter("android.intent.action.BATTERY_OKAY"));
     }
 
     @Override
     public void onBackPressed() {
-        if(this.drawerLayout.isDrawerOpen(GravityCompat.START)) this.drawerLayout.closeDrawer(GravityCompat.START);
+        if (this.drawerLayout.isDrawerOpen(GravityCompat.START))
+            this.drawerLayout.closeDrawer(GravityCompat.START);
         else super.onBackPressed();
     }
 
@@ -57,12 +56,12 @@ public class MainActivity extends AppCompatActivity implements CustomNavView {
         System.out.println("Don't mind the error \\/\\/\\/\n");
         setContentView(R.layout.main_activity);
         System.out.println("Don't mind the error /\\/\\/\\\n");
-        for(int i=0; i<25; i++) System.out.println("Space #"+i);
+        for (int i = 0; i < 25; i++) System.out.println("Space #" + i);
     }
 
     private void setToolBar() {
-            this.toolbar = findViewById(R.id.custom_toolbar);
-            setSupportActionBar(toolbar);
+        this.toolbar = findViewById(R.id.custom_toolbar);
+        setSupportActionBar(toolbar);
     }
 
     private void initActionBarDrawerToggle() {
@@ -83,11 +82,10 @@ public class MainActivity extends AppCompatActivity implements CustomNavView {
     }
 
     private void ifNewlyOpenedApp(Bundle savedInstanceState) {
-        if(savedInstanceState == null) {
+        if (savedInstanceState == null) {
             try {
                 mockClickHomeFragment();
-            }
-            catch(Exception e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -95,19 +93,20 @@ public class MainActivity extends AppCompatActivity implements CustomNavView {
 
     @Override
     public DrawerLayout getDrawerLayout() throws Exception {
-        if(this.drawerLayout == null) throw new Exception("this.drawerLayout == null");
+        if (this.drawerLayout == null) throw new Exception("this.drawerLayout == null");
         return this.drawerLayout;
     }
 
     @Override
     public NavigationView getNavigationView() throws Exception {
-        if(this.navigationView == null) throw new Exception("this.navigationView == null");
+        if (this.navigationView == null) throw new Exception("this.navigationView == null");
         return this.navigationView;
     }
 
     @Override
     public int[] getCurrentlySelectedNavViewItemIds() throws Exception {
-        if(this.currentlySelectedNavViewItemIds == null) throw new Exception("this.navigationView == null");
+        if (this.currentlySelectedNavViewItemIds == null)
+            throw new Exception("this.navigationView == null");
         return this.currentlySelectedNavViewItemIds;
     }
 
