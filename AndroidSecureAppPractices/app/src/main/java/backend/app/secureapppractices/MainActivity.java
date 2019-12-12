@@ -1,5 +1,7 @@
 package backend.app.secureapppractices;
 
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -10,12 +12,16 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.navigation.NavigationView;
 
+import backend.app.secureapppractices.ui.main.courses.receivers.BatteryLevelReceiver;
+
 public class MainActivity extends AppCompatActivity implements CustomNavView {
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private Toolbar toolbar;
     private ActionBarDrawerToggle actionBarDrawerToggle;
     public int[] currentlySelectedNavViewItemIds = {-1,-1,-1,-1};
+
+    private BatteryLevelReceiver batteryLevelReceiver;
 
     public MainActivity() {
         System.out.println("MainActivity() Constructor");
@@ -27,6 +33,10 @@ public class MainActivity extends AppCompatActivity implements CustomNavView {
         super.onCreate(savedInstanceState);
         init();
         ifNewlyOpenedApp(savedInstanceState);
+
+        batteryLevelReceiver = new BatteryLevelReceiver();
+        registerReceiver(batteryLevelReceiver, new IntentFilter(
+                Intent.ACTION_BATTERY_CHANGED));
     }
 
     @Override
