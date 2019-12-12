@@ -25,8 +25,7 @@ interface CustomNavView extends NavigationView.OnNavigationItemSelectedListener 
             CourseTheoretical1::new,
             CoursePractical1::new,
             CourseTheoretical2::new,
-            CoursePractical2::new,
-            CommentsFragment::new
+            CoursePractical2::new
     };
 
     public static final int[] courseFragmentNavElementIds = {
@@ -81,7 +80,7 @@ interface CustomNavView extends NavigationView.OnNavigationItemSelectedListener 
             if (this.getCurrentlySelectedNavViewItemIds()[2] != -1) {
                 openNewFragment(courseFragmentConstructors[0].getNewCourseFragment());
             } else if (this.getCurrentlySelectedNavViewItemIds()[3] != -1) {
-                openNewFragment(courseFragmentConstructors[5].getNewCourseFragment());
+                openNewFragment(new CommentsFragment());
             } else {
                 if (this.getCurrentlySelectedNavViewItemIds()[0] == courseFragmentNavElementIds[1]) {
                     if (this.getCurrentlySelectedNavViewItemIds()[1] == courseFragmentNavElementIds[3])

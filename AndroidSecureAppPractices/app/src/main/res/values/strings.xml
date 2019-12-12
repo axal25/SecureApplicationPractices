@@ -34,4 +34,5 @@
     <string name="course_number_nav_name">Course number</string>
     <string name="course_1_nav_name">Course 1</string>
     <string name="course_2_nav_name">Course 2</string>
+    <string name="delete_button_text">X</string>
 </resources>

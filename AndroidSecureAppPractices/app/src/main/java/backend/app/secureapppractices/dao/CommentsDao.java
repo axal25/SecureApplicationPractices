@@ -9,13 +9,24 @@ import android.provider.BaseColumns;
 import java.util.ArrayList;
 import java.util.List;
 
+import backend.app.secureapppractices.model.Comment;
+
 public class CommentsDao {
     CommentsDbHelper dbHelper;
     SQLiteDatabase db;
+    boolean instantiated;
 
     public CommentsDao(Context context) {
-        this.dbHelper = new CommentsDbHelper(context);
-        this.db = this.dbHelper.getWritableDatabase();
+        if (instantiated) {
+            System.out.println("Already instantiated");
+        } else {
+            this.dbHelper = new CommentsDbHelper(context);
+            this.db = this.dbHelper.getWritableDatabase();
+        }
+    }
+
+    public CommentsDbHelper getDbHelper() {
+        return dbHelper;
     }
 
     public long insert(String commentator, String comment) {
@@ -25,7 +36,7 @@ public class CommentsDao {
         return db.insert(CommentsContract.CommentsEntry.TABLE_NAME, null, values);
     }
 
-    public List findAll() {
+    public List<Comment> findAll() {
         String[] projection = {
                 BaseColumns._ID,
                 CommentsContract.CommentsEntry.COLUMN_NAME_COMMENTATOR,
@@ -42,17 +53,23 @@ public class CommentsDao {
                 null               // The sort order
         );
 
-        List items = new ArrayList<>();
-        while (cursor.moveToNext()) {
-            long itemId = cursor.getLong(cursor.getColumnIndexOrThrow(CommentsContract.CommentsEntry._ID));
-            System.out.println(String.format("Item id: {}", itemId));
-            items.add(cursor.getString(cursor.getColumnIndexOrThrow(CommentsContract.CommentsEntry._ID)));
+        List<Comment> items = new ArrayList<>();
+        if (cursor.moveToFirst()) {
+            do {
+                long itemId = cursor.getLong(cursor.getColumnIndexOrThrow(CommentsContract.CommentsEntry._ID));
+                String commentator, comment;
+                commentator = cursor.getString(cursor.getColumnIndex(CommentsContract.CommentsEntry.COLUMN_NAME_COMMENTATOR));
+                comment = cursor.getString(cursor.getColumnIndex(CommentsContract.CommentsEntry.COLUMN_NAME_COMMENT));
+                Comment item = new Comment(String.valueOf(itemId), commentator, comment);
+                System.out.println("Item id: " + itemId + ", commentator: " + commentator + ", comment: " + comment);
+                items.add(item);
+            } while (cursor.moveToNext());
         }
         cursor.close();
         return items;
     }
 
-    public List findByCommentator(String commentator) {
+    public List<Comment> findByCommentator(String selectedCommentator) {
         String[] projection = {
                 BaseColumns._ID,
                 CommentsContract.CommentsEntry.COLUMN_NAME_COMMENTATOR,
@@ -60,7 +77,7 @@ public class CommentsDao {
         };
 
         String selection = CommentsContract.CommentsEntry.COLUMN_NAME_COMMENTATOR + " = ?";
-        String[] selectionArgs = {commentator};
+        String[] selectionArgs = {selectedCommentator};
 
         String sortOrder =
                 CommentsContract.CommentsEntry.COLUMN_NAME_COMMENTATOR + " DESC";
@@ -75,11 +92,17 @@ public class CommentsDao {
                 sortOrder               // The sort order
         );
 
-        List items = new ArrayList<>();
-        while (cursor.moveToNext()) {
-            long itemId = cursor.getLong(cursor.getColumnIndexOrThrow(CommentsContract.CommentsEntry._ID));
-            System.out.println(String.format("Item id: {}", itemId));
-            items.add(cursor.getString(cursor.getColumnIndexOrThrow(CommentsContract.CommentsEntry._ID)));
+        List<Comment> items = new ArrayList<>();
+        if (cursor.moveToFirst()) {
+            do {
+                long itemId = cursor.getLong(cursor.getColumnIndexOrThrow(CommentsContract.CommentsEntry._ID));
+                String commentator, comment;
+                commentator = cursor.getString(cursor.getColumnIndex(CommentsContract.CommentsEntry.COLUMN_NAME_COMMENTATOR));
+                comment = cursor.getString(cursor.getColumnIndex(CommentsContract.CommentsEntry.COLUMN_NAME_COMMENT));
+                Comment item = new Comment(String.valueOf(itemId), commentator, comment);
+                System.out.println("Item id: " + itemId + ", commentator: " + commentator + ", comment: " + comment);
+                items.add(item);
+            } while (cursor.moveToNext());
         }
         cursor.close();
         return items;

@@ -100,4 +100,5 @@ public class MainActivity extends AppCompatActivity implements CustomNavView {
         if(this.currentlySelectedNavViewItemIds == null) throw new Exception("this.navigationView == null");
         return this.currentlySelectedNavViewItemIds;
     }
+
 }
