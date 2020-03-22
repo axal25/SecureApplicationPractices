@@ -7,6 +7,9 @@ Project for Project study course in University. Online study platform teaching g
  3. Docker
  4. Google Cloud Platform
  5. PostgreSQL
+ 
+### Presentation
+[Presentation in polish language can be found at link](Presentation_PL.pdf)
 
 ---
 ### Functionality
